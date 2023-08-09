@@ -1,0 +1,104 @@
+<p-confirmDialog [style]="{width: '35vw'}"></p-confirmDialog>
+<div style="padding: 70px 30px 20px 30px">
+    <div class="info">
+        <i class="fa-solid fa-circle-info"></i> &nbsp;&nbsp;
+        <h5><b>Create a task for {{projectName}} Project</b></h5>
+    </div>
+    <form [formGroup]="taskForm">
+        <div class="row mt-3">
+            <div class="col-lg-3">
+                <h6>Task</h6>
+                <input type="text" class="form-control" formControlName="task">
+            </div>
+            <div class="col-lg-3">
+                <h6>Task Type</h6>
+                <input type="text" class="form-control" formControlName="tasktype">
+            </div>
+            <div class="col-lg-3">
+                <h6>Plan Start Date</h6>
+                <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy"
+                    class="date" formControlName="planstartdate"></p-calendar>
+            </div>
+            <div class="col-lg-3">
+                <h6>Plan End Date</h6>
+                <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy"
+                    class="date" formControlName="planenddate"></p-calendar>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-lg-3">
+                <h6>Project Name</h6>
+                <input type="text" class="form-control" disabled [value]="projectName">
+            </div>
+            <div class="col-lg-3">
+                <h6>Task Status</h6>
+                <input type="text" class="form-control" formControlName="taskstatus">
+            </div>
+            <div class="col-lg-3">
+                <h6>Actual Start Date</h6>
+                <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy"
+                    class="date" formControlName="actualstartdate"></p-calendar>
+            </div>
+            <div class="col-lg-3">
+                <h6>Actual End Date</h6>
+                <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy"
+                    class="date" formControlName="actualenddate"></p-calendar>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-lg-3">
+                <h6>Hold From</h6>
+                <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy"
+                    class="date" formControlName="holdfrom"></p-calendar>
+            </div>
+            <div class="col-lg-3">
+                <h6>Resume From</h6>
+                <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy"
+                    class="date" formControlName="resumefrom"></p-calendar>
+            </div>
+            <div class="col-lg-3">
+                <h6>Discarded From</h6>
+                <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy"
+                    class="date" formControlName="discardedfrom"></p-calendar>
+            </div>
+            <div class="col-lg-3 mt-4">
+                <button class="btn btn-outline-danger px-4" (click)="clear()">Clear</button>
+                <button class="btn btn-primary mx-3 px-4" (click)="save()">{{isSave}}</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="mt-5 selectedLOV">
+        <table class="table table-striped">
+            <thead style="position: sticky;top: 0;">
+                <tr style="text-align: center;">
+                    <th style="width: 50px;">S.No.</th>
+                    <th>Task</th>
+                    <th  style="width: 250px;">Task Type</th>
+                    <th style="width: 180px;">Task Status</th>
+                    <th style="width: 130px;">Plan Start Date</th>
+                    <th style="width: 130px;">Plan End Date</th>
+                    <th style="width: 200px;">Created By</th>
+                    <th style="width: 120px;">Created On</th>
+                    <th style="width: 190px;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let obj of tasksList ;let i = index;">
+                    <td>{{i+1}}</td>
+                    <td>{{obj.task}}</td>
+                    <td>{{obj.tasktype}}</td>
+                    <td>{{obj.taskstatus}}</td>
+                    <td>{{obj.planstartdate}}</td>
+                    <td>{{obj.planenddate}}</td>
+                    <td>{{obj.createdby}}</td>
+                    <td>{{obj.createdon}}</td>
+                    <td class="py-0 pt-1">
+                        <button class="btn btn-primary py-1" (click)="updateTask(obj)">Update</button>
+                        <button class="btn btn-danger py-1" style="margin-left: 15px;" (click)="deleteTask(obj)">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+      </div>
+</div>

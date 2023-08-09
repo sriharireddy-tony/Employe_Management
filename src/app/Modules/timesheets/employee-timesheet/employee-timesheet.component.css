@@ -1,0 +1,130 @@
+.back {
+    position: absolute;
+    top: 71px;
+    left: 2vw;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.back:hover {
+    color: red;
+}
+
+.contai {
+    padding-top: 54px;
+}
+.projAllo{
+    width: 3000px;
+}
+
+.projAllo thead tr th {
+    background-color: black;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.projAllo tbody tr td {
+    padding: 0px;
+}
+
+.projAllo tbody tr td :where(select, input, textarea) {
+    border: none;
+}
+
+.projAllo tbody tr td :where(select, input, textarea):focus {
+    box-shadow: none !important;
+}
+
+.delBtn {
+    color: #fa0000;
+    font-size: 22px;
+    margin-top: 7px;
+    margin-left: 10px;
+}
+
+.remarksText {
+    padding: 0px;
+    font-size: 15px;
+    height: 38px;
+}
+.snoFix{
+    left: 0;
+    position: sticky;
+}
+.projFix{
+    left: 58px;
+    position: sticky;
+}
+.projTask{
+    left: 337px;
+    position: sticky;
+}
+.bgorange{
+    background-color: orange !important;
+    color: black !important;
+}
+
+.tablediv{
+    padding: 25px 0vw 0px 0vw;
+}
+
+.projectTable th {
+    border: 1px solid #ddd;
+    padding: 10px 0px;
+    background-color: black;
+    color: aliceblue;
+    justify-content: center;
+  }
+  
+  .projectTable td {
+    border: 1px solid white;
+    padding: 8px;
+  }
+  .projectTable tr:hover {
+   background-color: bisque !important;
+   font-weight: bold;
+  }
+  .even-row {
+    background-color: #f2f2f2 !important;
+  }
+  
+  .odd-row {
+    background-color: #ddd !important;
+  }
+  .tableFooter i {
+    font-size: 30px;
+    margin-left: 13px;
+    color: red;
+    margin-top: 7px;
+}
+
+.tableFooter {
+    display: flex;
+    justify-content: space-between;
+    background-color: antiquewhite;
+}
+
+.tableFooter button {
+    margin: 4px 25px;
+    padding: 5px 20px;
+    border: none;
+    background-color: blueviolet;
+    color: white;
+    cursor: pointer;
+}
+.dis{
+    pointer-events: none;
+    background-color: #e9ecef;
+}
+.updateBtnHilight{
+    color: darkmagenta !important;
+    transform: scale(1.2);
+}
+#searchicon {
+    position: absolute;
+    top: 37px;
+    right: 18px;
+    font-size: 22px;
+    color: rgb(0, 24, 37);
+  }

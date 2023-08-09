@@ -1,1 +1,178 @@
-<p>project-table works!</p>
+<p-confirmDialog [style]="{width: '35vw'}"></p-confirmDialog>
+
+<div class="modal modal-cus shadow" tabindex="-1" role="dialog" [ngStyle]="{'display':visible}">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header py-1 regCSS">
+        <h4 class="">Project Management</h4>
+        <button type="button" class="btnClose" (click)="closePopup()">X</button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <form [formGroup]="projectForm">
+          <div class="row px-4 py-3" style="width: 100%;">
+            <div class="col-lg-3">
+              <h6>Project Name</h6>
+              <input type="text" class="form-control" formControlName="projectname">
+            </div>
+            <div class="col-lg-3">
+              <h6>Client</h6>
+              <input type="text" class="form-control" formControlName="clientname">
+            </div>
+            <div class="col-lg-3">
+              <h6>Plan start date</h6>
+              <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy" class="date"
+                formControlName="planstartdate"></p-calendar>
+            </div>
+            <div class="col-lg-3">
+              <h6>Plan end date</h6>
+              <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy" class="date"
+                formControlName="planenddate"></p-calendar>
+            </div>
+          </div>
+          <div class="row px-4 py-3" style="width: 100%;">
+            <div class="col-lg-3">
+              <h6>Actual Start Date</h6>
+              <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy" class="date"
+                formControlName="actualstartdate"></p-calendar>
+            </div>
+            <div class="col-lg-3">
+              <h6>Actual End Date</h6>
+              <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy" class="date"
+                formControlName="actualenddate"></p-calendar>
+            </div>
+            <div class="col-lg-3">
+              <h6>Financial Year</h6>
+              <input type="text" class="form-control" formControlName="financialyear">
+            </div>
+            <div class="col-lg-3">
+              <h6>PO Number</h6>
+              <input type="text" class="form-control" formControlName="ponumber">
+            </div>
+          </div>
+          <div class="row px-4 py-3" style="width: 100%;">
+            <div class="col-lg-3">
+              <h6>PO Amount</h6>
+              <input type="text" class="form-control" formControlName="poamount">
+            </div>
+            <div class="col-lg-3">
+              <h6>Project Status</h6>
+              <input type="text" class="form-control" formControlName="projectstatus">
+            </div>
+            <div class="col-lg-3">
+              <h6>PO Status</h6>
+              <input type="text" class="form-control" formControlName="postatus">
+            </div>
+            <div class="col-lg-3">
+              <h6>PO Cleared Percentage</h6>
+              <input type="text" class="form-control" formControlName="poclearedpercentage">
+            </div>
+          </div>
+          <div class="row px-4 py-3" style="width: 100%;padding-bottom: 25px !important;">
+            <div class="col-lg-3">
+              <h6>Hold From</h6>
+              <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy" class="date"
+                formControlName="holdfrom"></p-calendar>
+            </div>
+            <div class="col-lg-3">
+              <h6>Resume From</h6>
+              <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy" class="date"
+                formControlName="resumefrom"></p-calendar>
+            </div>
+            <div class="col-lg-3">
+              <h6>Discarded From</h6>
+              <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy" class="date"
+                formControlName="discardedfrom"></p-calendar>
+            </div>
+            <div class="col-lg-3 mt-4" style="justify-content: end;display: flex;">
+              <button class="btn btn-outline-danger px-4" style="margin-right: 20px;" (click)="clearProjects()">
+                Clear</button>
+              <button class="btn btn-primary px-4" (click)="saveProjects()">{{isSave}}</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <div class="back" (click)="back()"> 
+  <i class="fa-solid fa-arrow-left-long"></i><b>Back</b>
+</div> -->
+<div class="textSearch contai" style="display: flex;">
+  <div style="width: 220px;">
+    <button class="btn btn-primary" (click)="createProject()">Create Project</button>
+  </div>
+  <div style="width: 100%;">
+    <input class="form-control" type="text" placeholder="Search..." [(ngModel)]="searchText">
+    <i class="fa-solid fa-magnifying-glass" *ngIf="!searchText"></i>
+    <i class="fa-solid fa-xmark" style="color: #ff0000;" *ngIf="searchText" (click)="clearText()"></i>
+  </div>
+</div>
+
+<div class="container-fluid contai">
+
+  <div class="tablediv">
+    <p-table class="projectTable"
+      [value]="projects | searchFilter: searchText:['projectname','clientname','planenddate','actualstartdate','actualenddate','financialyear','createdon',
+      'ponumber','poamount','projectstatus','postatus','poclearedpercentage','holdfrom','resumefrom','discardedfrom','createdby','updatedby','updatedon']"
+      [scrollable]="true" dataKey="id">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="min-width:50px" pFrozenColumn>S.No.</th>
+          <th style="min-width:250px" pFrozenColumn>Project Name</th>
+          <th style="min-width:210px" pFrozenColumn>Client</th>
+          <th style="min-width:140px">Plan Start Date</th>
+          <th style="min-width:140px">Plan End date</th>
+          <th style="min-width:150px">Actual Start date</th>
+          <th style="min-width:140px">Actual End date</th>
+          <th style="min-width:140px">Financial Year</th>
+          <th style="min-width:120px">PO Number</th>
+          <th style="min-width:120px">PO Amount</th>
+          <th style="min-width:120px">Project Status</th>
+          <th style="min-width:120px">PO Status</th>
+          <th style="min-width:190px">PO Cleared Percentage</th>
+          <th style="min-width:130px">Hold From</th>
+          <th style="min-width:130px">Resume From</th>
+          <th style="min-width:150px">Discarded From</th>
+          <th style="min-width:130px">Created By</th>
+          <th style="min-width:130px">Updated By</th>
+          <th style="min-width:130px">Created On</th>
+          <th style="min-width:130px">Updation On</th>
+          <th style="min-width:80px"></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-obj let-i="rowIndex">
+        <tr [ngClass]="{ 'even-row': i % 2 === 0, 'odd-row': i % 2 !== 0 }">
+          <td style="min-width:50px" pFrozenColumn>{{i+1}}</td>
+          <td style="min-width:250px" class="hyperLink" pFrozenColumn routerLink="/Project_Management/taskCreate" [queryParams]="{ ProjctId: obj.id, ProjectName: obj.projectname }">{{obj.projectname}}</td>
+          <td style="min-width:210px" pFrozenColumn>{{obj.clientname}}</td>
+          <td style="min-width:140px">{{obj.planstartdate}}</td>
+          <td style="min-width:140px">{{obj.planenddate}}</td>
+          <td style="min-width:150px">{{obj.actualstartdate}}</td>
+          <td style="min-width:140px">{{obj.actualenddate}}</td>
+          <td style="min-width:140px">{{obj.financialyear}}</td>
+          <td style="min-width:120px">{{obj.ponumber}}</td>
+          <td style="min-width:120px">{{obj.poamount}}</td>
+          <td style="min-width:120px">{{obj.projectstatus}}</td>
+          <td style="min-width:120px">{{obj.postatus}}</td>
+          <td style="min-width:190px">{{obj.poclearedpercentage}}</td>
+          <td style="min-width:130px">{{obj.holdfrom}}</td>
+          <td style="min-width:130px">{{obj.resumefrom}}</td>
+          <td style="min-width:150px">{{obj.discardedfrom}}</td>
+          <td style="min-width:130px">{{obj.createdby}}</td>
+          <td style="min-width:130px">{{obj.updatedby}}</td>
+          <td style="min-width:130px">{{obj.createdon}}</td>
+          <td style="min-width:130px">{{obj.updatedon}}</td>
+          <td style="min-width:80px"> 
+            <i class="fa-solid fa-pen-to-square updateBtn" (click)="projectClick(obj)"></i>
+            <i class="fa-solid fa-trash" style="margin-right: 10px;" (click)="deleteProjects(obj)"></i>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+
+</div>

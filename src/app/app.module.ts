@@ -6,11 +6,15 @@ import { AppComponent } from './app.component';
 import { ToastrModule } from 'ngx-toastr';
 import { SharedModule } from './shared.module';
 // import { AuthModule } from './Modules/auth/auth.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HomeComponent } from './Components/home/home.component';
+import { TokenHandlingInterceptor } from './Interceptors/token-handling.interceptor';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -19,9 +23,13 @@ import { HttpClientModule } from '@angular/common/http';
     ToastrModule.forRoot({positionClass:'toast-bottom-right',timeOut: 2000}),
     SharedModule,
     // AuthModule,
-    HttpClientModule
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [DatePipe,
+    [
+      { provide: HTTP_INTERCEPTORS, useClass: TokenHandlingInterceptor, multi: true }
+    ]
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

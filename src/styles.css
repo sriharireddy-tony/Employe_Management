@@ -1,0 +1,271 @@
+/* You can add global styles to this file, and also import other style files */
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.btn {
+  border-radius: 2px !important;
+  box-shadow: 5px 5px 6px grey !important;
+}
+
+.borderRed {
+  border: 1px solid red !important;
+  border-radius: 7px !important;
+}
+
+.redStar {
+  font-size: 22px;
+  top: 0px;
+  color: red;
+}
+
+.red {
+  color: red !important;
+}
+
+.p-overlaypanel .p-overlaypanel-content {
+  background-color: bisque;
+}
+
+.p-datatable-scrollable>.p-datatable-wrapper>.p-datatable-table>.p-datatable-thead {
+  background-color: black;
+  color: white;
+}
+
+::-webkit-scrollbar {
+  width: 0.6em;
+  height: 0.6em;
+  border-left: 1px solid #ddd !important;
+  background: #e8e8e8;
+}
+
+::-webkit-scrollbar-thumb {
+  background: grey;
+  border-radius: 8px;
+}
+
+.projectDilog .p-dialog {
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 1.2) !important;
+  background-color: white;
+}
+
+.projectDilog .p-dialog .p-dialog-header-icons {
+  padding: 0px 10px 8px 0px;
+  font-size: 25px;
+}
+
+.projectDilog .p-dialog-title {
+  color: blueviolet !important;
+  font-weight: bold;
+  font-size: 23px;
+  padding: 11px 0px 5px 18px;
+}
+
+.p-calendar {
+  width: 100% !important;
+  height: 38px !important;
+}
+
+.date .p-calendar-w-btn .p-datepicker-trigger {
+  color: black !important;
+  background: burlywood !important;
+  border: 1px solid burlywood !important;
+  border-radius: 0px 7px 7px 0px !important;
+}
+
+.p-datepicker table td {
+  padding: 0rem !important;
+}
+
+.p-datepicker table td>span.p-highlight {
+  color: white !important;
+  background: blueviolet !important;
+}
+
+.p-datepicker .p-datepicker-header {
+  padding: 0px !important;
+}
+
+.p-datepicker table td>span {
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  border-radius: 0% !important;
+}
+
+.p-datepicker .p-datepicker-header .p-datepicker-title {
+  line-height: 1rem !important;
+  color: black;
+  background-color: #ffd679;
+}
+
+.p-datepicker:not(.p-datepicker-inline) .p-datepicker-header {
+  background: #ffd679 !important;
+}
+
+.date .p-calendar-w-btn .p-inputtext {
+  /* border: 1px solid #ddd !important; */
+  border-radius: 7px 0px 0px 7px !important;
+}
+
+.p-calendar .p-datepicker {
+  background-color: aliceblue !important;
+}
+
+.projectDilog .p-dialog-header {
+  border-bottom: 1px solid #ddd;
+}
+
+.hyperLink {
+  color: blue;
+  text-decoration: underline;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.modal-cus {
+  background-color: #2925258a;
+}
+
+.modal-lg {
+  --bs-modal-width: 80vw !important;
+}
+
+p-confirmdialog>div>div>div.p-dialog-footer>.p-confirm-dialog-reject {
+  background-color: #f84c4c !important;
+  border-color: #f84c4c !important;
+}
+
+p-confirmdialog>div>div>div.p-dialog-header>div>button>span {
+  font-size: 23px !important;
+  color: red !important;
+}
+
+/* ---- Modules Header --------- */
+
+.logout {
+  position: absolute;
+  top: 14%;
+  right: 2%;
+  display: flex;
+}
+
+.logoutImg {
+  width: 7%;
+  cursor: pointer;
+}
+
+.logout div {
+  background: transparent;
+  border: none;
+  font-size: 30px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.userOverlay {
+  cursor: pointer;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  /* background: #ff4646; */
+  background-image: linear-gradient(to right, #87CEFA, #6363ff, #0000fd);
+  color: white;
+  height: 53px;
+  position: fixed;
+  width: 100%;
+  z-index: 3;
+}
+
+.p-sidebar-left {
+  background-color: aliceblue !important;
+}
+
+.p-autocomplete {
+  width: 100% !important;
+  height: 38px !important;
+}
+
+.autocomplete-container .input-container .x i {
+  color: red !important;
+  font-size: 30px !important;
+}
+
+.autocomplete-container {
+  box-shadow: 0 0px 2px #0003, 0 0px 4px #00000024, 0 2px 2px -2px #0000001f !important;
+  border-radius: 6px !important;
+  height: 37px !important;
+}
+.autocomplete-container .input-container input{
+  margin-top: 3px !important;
+  height: 30px !important;
+}
+
+i {
+  cursor: pointer;
+}
+
+.ui-accordion .ui-accordion-header .ui-icon {
+  margin-top: -8px !important;
+  position: absolute !important;
+  right: 0.5em !important;
+  top: 50% !important;
+}
+
+.p-accordion .p-accordion-content {
+  border: 3px solid #ddd !important;
+  border-top-color: transparent !important;
+  margin-top: -3px;
+}
+
+.p-accordion .p-accordion-header .p-accordion-header-link {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  border-radius: 0px !important;
+  padding: 13px !important;
+  background-color: #feb6c1 !important;
+  color: black !important;
+}
+
+p-accordion>div>p-accordiontab>div>div>a>span::before {
+  color: black !important;
+}
+
+div>p-accordiontab>div>div>a {
+  height: 44px !important;
+}
+
+p-accordiontab>div>div>a>span {
+  order: 1 !important;
+  margin-right: 0px !important;
+  padding-left: 8px;
+}
+
+p-accordiontab>div>div>a {
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+
+.flexBetween {
+  display: flex !important;
+  justify-content: space-between !important;
+  width: 100%;
+}
+
+.projAllo p-calendar>span>button {
+  width: 25px !important;
+}
+
+.projAllo p-calendar>span>input {
+  border: none !important;
+  padding: 0px 4px !important;
+}

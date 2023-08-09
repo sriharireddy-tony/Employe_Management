@@ -1,0 +1,31 @@
+<div class="head col-lg-12">
+    <div class="ps-2 mt-1"><i class="fa-solid fa-bars" style="color: #ffffff;" (click)="sidebarVisible = true"></i></div>
+    <div class="dreamHide">
+        <h2 class="mt-1">Dashboard</h2>
+    </div>
+    <div class="pe-2 mt-1">
+        <div class="logout">
+            <h5 class="mt-2">{{userName}}</h5> &nbsp; &nbsp; &nbsp;
+            <div class="card">
+                <p-overlayPanel #op>
+                    <div class="userOverlay">
+                        <h6 class="mb-0"  (click)="logout()">Logout</h6>
+                    </div>
+                </p-overlayPanel>
+                    <i class="fa-solid fa-user-gear" (click)="op.toggle($event)"></i>
+            </div>
+    </div>
+    </div>
+</div>
+<p-sidebar [(visible)]="sidebarVisible">
+    <div class="sidebarTabs">
+    <h5 routerLink="/Dashboard/lovValues" routerLinkActive="tabHilight" (click)="tabClick()">LOV Update</h5>
+    <hr/>
+    <h5 (click)="tabClick()" routerLinkActive="tabHilight">Teams Update</h5>
+    <hr/>
+    <h5 (click)="tabClick()" routerLinkActive="tabHilight">Players Update</h5>
+    <hr/>
+   </div>
+</p-sidebar>
+
+<router-outlet></router-outlet>

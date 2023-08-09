@@ -1,0 +1,22 @@
+.head .fa-bars {
+    font-size: 30px;
+    color: #0300ff !important;
+    padding: 10px 23px;
+    cursor: pointer;
+}
+
+.sidebarTabs h5 {
+    cursor: pointer;
+    padding: 10px 0px;
+    margin: 0px;
+}
+
+.sidebarTabs hr {
+    margin: 0px;
+}
+
+.tabHilight {
+    color: black ;
+    font-size: 30px ;
+    transform: scale(0.9) ;
+}

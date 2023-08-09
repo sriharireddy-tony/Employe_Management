@@ -1,0 +1,115 @@
+<p-confirmDialog [style]="{width: '35vw'}"></p-confirmDialog>
+<div class="contai px-5">
+    <!-- <div class="back" (click)="back()">
+        <i class="fa-solid fa-arrow-left-long"></i><b>Back</b>
+    </div>  -->
+</div>
+<div style="margin-top: 15px;" class="px-5 pt-3">
+    <div class="jobRow">
+        <div class="leftSide">
+            <div class="adminLane">
+                <h4 class="mt-2 ps-3">{{userName}}</h4>
+                <img src="assets\Images\userpng.jpg" height="50" width="50">
+            </div>
+            <div class="info">
+                <i class="fa-solid fa-circle-info mt-1" style="color:brown;"></i> &nbsp;
+                <span style="color: green;"><b>Employees under {{userName}}</b></span>
+            </div>
+            <div class="employeLane">
+                <h5 *ngFor="let obj of empListArr;let i=index" (click)="empClick(obj);getEmpTasks(obj)" [ngClass]="{'tabHilight': tabClickObj == obj}">
+                    {{obj.empname}}-{{obj.empid}}</h5>
+            </div>
+        </div>
+        <div class="rightSide">
+            <div *ngIf="!isObjectEmpty(tabClickObj)">
+                <p-accordion>
+                    <p-accordionTab [selected]="true">
+                        <p-header class="flexBetween">
+                            <span class="header-text"><b>Project Allocation</b></span>
+                            <!-- <button class="header-button" >Download</button> -->
+                        </p-header>
+                        <p-footer>
+                            <div>
+                                <table class="table table-bordered projAllo">
+                                    <thead>
+                                        <tr>
+                                            <th rowspan="2" style="width: 50px;">S.No.</th>
+                                            <th rowspan="2">Project</th>
+                                            <th rowspan="2">Task</th>
+                                            <th rowspan="2">Remarks</th>
+                                            <th rowspan="2" style="width: 130px;">Start Date</th>
+                                            <th rowspan="2" style="width: 130px;">End Date</th>
+                                            <th colspan="2" style="width: 140px;padding: 2px;">Allocated</th>
+                                            <th rowspan="2" style="width: 80px;"></th>
+                                        </tr>
+                                        <tr>
+                                            <th style="width: 70px;padding: 2px;">%</th>
+                                            <th style="width: 70px;padding: 2px;">Hours</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let obj of projAllocation;let i = index">
+                                            <td class="text-center align-middle" [ngClass]="{'dis': obj.id && updateObj != obj}">{{i+1}}</td>
+                                            <td [ngClass]="{'dis': obj.id && updateObj != obj}">
+                                                <select class="form-select" [(ngModel)]="obj.project" (click)="selectProj($event,i)" [ngClass]="{'dis': obj.id && updateObj != obj}">
+                                                    <option value=null>Select Project</option>
+                                                    <option [value]="obj1.projectname" *ngFor="let obj1 of projectsArr">
+                                                        {{obj1.projectname}}</option>
+                                                </select>
+                                            </td>
+                                            <td [ngClass]="{'dis': obj.id && updateObj != obj}">
+                                                <select class="form-select" [(ngModel)]="obj.task" [ngClass]="{'dis': obj.id && updateObj != obj}">
+                                                    <option value=null>Select Task</option>
+                                                    <option [value]="obj2.task" *ngFor="let obj2 of obj.tasksArr">
+                                                        {{obj2.task}}</option>
+                                                </select>
+                                            </td>
+                                            <td [ngClass]="{'dis': obj.id && updateObj != obj}">
+                                                <textarea class="form-control remarksText" placeholder="Enter Remarks" [(ngModel)]="obj.remarks" [disabled]="!!obj.id && updateObj != obj"
+                                                 [title]=obj.remarks> </textarea>
+                                            </td>
+                                            <td class="text-center" [ngClass]="{'dis': obj.id && updateObj != obj}">
+                                                <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" [(ngModel)]="obj.startdate"
+                                                    dateFormat="dd-mm-yy" class="date"></p-calendar>
+                                            </td>
+                                            <td class="text-center" [ngClass]="{'dis': obj.id && updateObj != obj}">
+                                                <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" [(ngModel)]="obj.enddate"
+                                                    dateFormat="dd-mm-yy" class="date"></p-calendar>
+                                            </td>
+                                            <td class="text-center" [ngClass]="{'dis': obj.id && updateObj != obj}">
+                                                <input type="text" class="form-control" [(ngModel)]="obj.allocationpercentage" [ngClass]="{'dis': obj.id && updateObj != obj}">
+                                            </td>
+                                            <td class="text-center" [ngClass]="{'dis': obj.id && updateObj != obj}">
+                                                <input type="text" class="form-control" [(ngModel)]="obj.allocationhours" [ngClass]="{'dis': obj.id && updateObj != obj}">
+                                            </td>
+                                            <td>
+                                                <i class="fa-solid fa-pen-to-square updateBtn" (click)="updateProj(obj)" [ngStyle]="{'visibility' : obj.id ? 'visible' : 'hidden'}"
+                                                          [ngClass]="{'updateBtnHilight': updateObj == obj }"></i>
+                                                <i class="fa-solid fa-trash delBtn" style="color: #fa0000;" (click)="delProj(obj)"></i>
+                                            </td>
+                                        </tr>
+                                        <tr >
+                                            <td colspan="9">
+                                                <div class="tableFooter">
+                                                    <i class="fa-solid fa-plus" (click)="addProjAllo()"></i>
+                                                    <div>
+                                                        <button class="btn" type="button" style="background-color: #007c8f;" (click)="saveProjAllo()" *ngIf="isObjectEmpty(updateObj)"
+                                                        [disabled]="!isObjectEmpty(updateObj)" [ngClass]="{'saveDis': !isObjectEmpty(updateObj)}">Save</button>
+                                                        <button class="btn" type="button" [disabled]="isObjectEmpty(updateObj)" *ngIf="!isObjectEmpty(updateObj)"
+                                                        [ngClass]="{'disaUpdate': isObjectEmpty(updateObj)}" (click)="updateProjAllo()">Update</button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </p-footer>
+                    </p-accordionTab>
+                </p-accordion>
+
+            </div>
+        </div>
+    </div>
+</div>

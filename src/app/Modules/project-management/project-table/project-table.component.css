@@ -1,0 +1,114 @@
+.contai{
+    padding-top: 54px;
+}
+.tablediv{
+    padding: 70px 1vw 10px 1vw
+}
+.textuser{
+    margin-top: 5px;
+    color: blue;
+    text-align: center;
+}
+table  thead tr{
+    background-color: black ;
+        color: white !important;
+    }
+
+.editDel i{
+font-size: 22px;
+}
+
+.editDel .fa-user-pen{
+    color: #075d03;
+}
+.editDel .fa-trash{
+    color: red;
+} 
+.textSearch{
+    margin-top: 15px;
+    width: 25vw;
+    float: right;
+    margin-bottom: 10px;
+    margin-right: 3vw;
+    position: relative;
+}
+.textSearch .fa-magnifying-glass, .textSearch .fa-xmark{
+    position: absolute;
+    top: 62px;
+    right: 13px;
+    font-size: 23px;
+}
+.textSearch .fa-xmark{
+    font-size: 25px;
+    top: 60px;
+}
+  
+  /* Style for the table headers */
+  .projectTable th {
+    border: 1px solid #ddd;
+    padding: 10px 0px;
+    background-color: black;
+    color: aliceblue;
+    justify-content: center;
+  }
+  
+  /* Style for the table cells */
+  .projectTable td {
+    border: 1px solid white;
+    padding: 8px;
+  }
+  .projectTable tr:hover {
+   background-color: bisque !important;
+   font-weight: bold;
+  }
+  .even-row {
+    background-color: #f2f2f2 !important;
+  }
+  
+  /* Style for odd rows (white background) */
+  .odd-row {
+    background-color: #ddd !important;
+  }
+  .projectDilog p{
+    font-size: 15px;
+    color: blue;
+  }
+ .fa-trash{
+    font-size: 23px;
+    margin-left: 14px;
+    color: red;
+    background: transparent;
+    cursor: pointer;
+ }
+
+ .regCSS{
+    background-color: blueviolet;
+    color: white;
+  }
+  .btnClose{
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 25px;
+  }
+  .btnClose:hover{
+    color: #f7ff00;
+    transform: scale(1.2);
+  }
+  .back{
+    position: absolute;
+    top: 71px;
+    left: 2vw;
+    font-size: 22px;
+    cursor: pointer;
+}
+.back:hover {
+    color: red;
+}
+.updateBtn{
+  font-size: 23px;
+  margin-top: 0px;
+  /* margin-right: 15px; */
+  color: #486448;
+  margin-left: 0px;
+}

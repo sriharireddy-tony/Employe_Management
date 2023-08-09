@@ -1,0 +1,82 @@
+.contai {
+    padding-top: 54px;
+}
+
+#searchicon {
+    position: absolute;
+    top: 10px;
+    right: 18px;
+    font-size: 22px;
+    color: rgb(0, 24, 37);
+}
+
+.lovUpdate {
+    display: flex;
+    margin-top: 60px;
+}
+
+.lovUpdate h6 {
+    color: red;
+}
+
+.selectedLOV {
+    margin-top: 3px;
+}
+
+.selectedLOV th {
+    border: 1px solid #ddd;
+    padding: 10px 0px;
+    background-color: black;
+    color: aliceblue;
+    justify-content: center;
+}
+
+.selectedLOV td {
+    border: 1px solid white;
+    padding: 8px;
+}
+
+.selectedLOV tr:hover {
+    background-color: red !important;
+    font-weight: bold;
+}
+.back{
+    position: absolute;
+    top: 71px;
+    left: 2vw;
+    font-size: 22px;
+    cursor: pointer;
+}
+.back:hover {
+    color: red;
+}
+.LOVTable{
+    margin-top: -45px;
+    display: flex;
+}
+.LOVTable h6{
+    color: red;
+}
+.save{
+    background-color: aliceblue;
+    padding-bottom: 15px;
+
+}
+.textSearch{
+    margin-top: 15px;
+    width: 25vw;
+    float: right;
+    margin-bottom: 10px;
+    margin-right: 3vw;
+    position: relative;
+}
+.textSearch .fa-magnifying-glass, .textSearch .fa-xmark{
+    position: absolute;
+    top: 8px;
+    right: 13px;
+    font-size: 23px;
+}
+.textSearch .fa-xmark{
+    font-size: 25px;
+    top: 6px;
+}

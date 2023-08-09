@@ -1,0 +1,34 @@
+.info {
+    display: flex;
+}
+
+.info>.fa-circle-info {
+    color: red;
+    margin-top: 3px;
+    font-size: 22px;
+}
+
+.info>h5 {
+    color: #ff2c00;
+}
+.selectedLOV {
+    margin-top: 3px;
+}
+
+.selectedLOV th {
+    border: 1px solid #ddd;
+    padding: 10px 0px;
+    background-color: black;
+    color: aliceblue;
+    justify-content: center;
+}
+
+.selectedLOV td {
+    border: 1px solid white;
+    padding: 8px;
+}
+
+.selectedLOV tr:hover {
+    background-color: red !important;
+    font-weight: bold;
+}

@@ -1,0 +1,88 @@
+<p-confirmDialog [style]="{width: '35vw'}"></p-confirmDialog>
+<div class="contai px-5">
+    <!-- <div class="back" (click)="back()">
+        <i class="fa-solid fa-arrow-left-long"></i><b>Back</b>
+    </div> -->
+</div>
+<div style="margin-top: 15px;" class="px-5 pt-3">
+    <div class="row">
+        <div class="col-lg-2">
+            <h6>Year:</h6>
+            <select class="form-select" [(ngModel)]="currentYear" (ngModelChange)="setDates()" (change)="getTimesheet()">
+                <option value="">select Year</option>
+                <option [value]="item" *ngFor="let item of yearArr">{{item}}</option>
+            </select>
+        </div>
+        <div class="col-lg-2">
+            <h6>Month:</h6>
+            <select class="form-select" [(ngModel)]="currentMonth" (ngModelChange)="setDates()" (change)="getTimesheet()">
+                <option value="">select Month</option>
+                <option [value]="item" *ngFor="let item of monthArr">{{item}}</option>
+            </select>
+        </div>
+        <div class="col-lg-2">
+            <h6>Reporting Manager:</h6>
+            <input type="text" class="form-control" [(ngModel)]="userData.reportingmanager" disabled>
+        </div>
+    </div>
+
+
+
+    <div class="tablediv">
+        <div class="pt-4 table-responsive">
+            <table class="table table-bordered projAllo mb-0">
+                <thead>
+                    <tr>
+                        <th rowspan="2" style="width: 50px;" class="snoFix">S.No.</th>
+                        <th rowspan="2" style="width: 300px;" class="projFix">Project</th>
+                        <th rowspan="2" style="width: 260px;" class="projTask">Task</th>
+                        <th rowspan="2" style="width: 300px;">Remarks</th>
+                        <th [attr.colspan]="dateAndDayArray.length" style="width: 140px;padding: 2px;">{{currentMonth}}</th>
+                        <th rowspan="2" style="width: 80px;"></th>
+                    </tr>
+                    <tr>
+                        <th style="width: 70px;padding: 2px;"
+                            [ngClass]="{'bgorange': obj.dayName =='Sat' || obj.dayName =='Sun'}"
+                            *ngFor="let obj of dateAndDayArray">{{obj.date}} {{obj.dayName}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of timeSheet;let i =index">
+                        <td class="text-center align-middle snoFix" [ngClass]="{'dis': data.id && updateObj != data}">{{i+1}}</td>
+                        <td class="projFix" [ngClass]="{'dis': data.id && updateObj != data}">
+                            <select class="form-select" [(ngModel)]="data.project" (change)="selectProj($event,i)" [ngClass]="{'dis': data.id && updateObj != data}">
+                                <option value=''>Select Project</option>
+                                <option [value]="obj.projectname" *ngFor="let obj of projectsArr">{{obj.projectname}}
+                                </option>
+                            </select>
+                        </td>
+                        <td class="projTask" [ngClass]="{'dis': data.id && updateObj != data}">
+                            <select class="form-select" [(ngModel)]="data.task" [ngClass]="{'dis': data.id && updateObj != data}">
+                                <option value=''>Select Task</option>
+                                <option [value]="obj.task" *ngFor="let obj of data.taskArr">{{obj.task}}
+                            </select>
+                        </td>
+                        <td [ngClass]="{'dis': data.id && updateObj != data}">
+                            <textarea class="form-control remarksText" placeholder="Enter Remarks" [ngClass]="{'dis': data.id && updateObj != data}"
+                                [(ngModel)]="data.remarks" [title]="data.remarks"></textarea>
+                        </td>
+                        <td class="text-center" *ngFor="let obj of data.dateAndDayArray;let j =index" [ngClass]="{'dis': data.id && updateObj != data}">
+                            <input type="text" class="form-control" [(ngModel)]="obj.time" [ngClass]="{'dis': data.id && updateObj != data}" appNumsOnly>
+                        </td>
+                        <td>
+                            <i class="fa-solid fa-pen-to-square" [ngStyle]="{'visibility' : data.id ? 'visible' : 'hidden'}"
+                            (click)="updateTimesheet(data)" [ngClass]="{'updateBtnHilight':updateObj == data}" style="color: #0096fa;margin-left: 10px;font-size: 22px;"></i>
+                            <i class="fa-solid fa-trash delBtn" style="color: #fa0000;" (click)="delProjTask(i)"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="tableFooter">
+        <i class="fa-solid fa-plus" (click)="addTimesheet()"></i>
+        <div style="margin-bottom: 3px;">
+            <button type="button" class="btn" style="background-color: #007c8f;" (click)="save()" *ngIf="isObjectEmpty(updateObj)">Save</button>
+            <button type="button" class="btn" *ngIf="!isObjectEmpty(updateObj)" (click)="updateBtnTM()">Update</button>
+        </div>
