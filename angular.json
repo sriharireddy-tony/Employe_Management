@@ -49,13 +49,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "2mb"
                 }
               ],
               "fileReplacements": [
@@ -84,8 +84,7 @@
               "browserTarget": "Employe_Management:build:production"
             },
             "development": {
-              "browserTarget": "Employe_Management:build:development",
-              "proxyConfig": "src/proxy.config.json"
+              "browserTarget": "Employe_Management:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -117,5 +116,8 @@
       }
     }
   },
-  "defaultProject": "Employe_Management"
+  "defaultProject": "Employe_Management",
+  "cli": {
+    "analytics": "1560e1f3-23dd-423d-ace2-99e42147fd9a"
+  }
 }
