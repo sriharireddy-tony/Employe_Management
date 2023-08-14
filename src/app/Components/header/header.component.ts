@@ -1,22 +1,21 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { AuthService } from 'src/app/Services/auth.service';
 import { SharedService } from 'src/app/Services/shared.service';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.css']
 })
-export class DashboardComponent implements OnInit {
-
+export class HeaderComponent implements OnInit {
+  // @Input title
   @ViewChild('op') overlayPanel!: OverlayPanel;
   userName: string = '';
   roleTabs: any =[];
-
-  constructor(private service: AuthService, private roter: Router, private shared: SharedService) { }
-  sidebarVisible: boolean = false;
+  
+  constructor(private service: AuthService, private shared:SharedService, private roter:Router) { }
 
   ngOnInit(): void {
     this.getUserName();
@@ -36,10 +35,8 @@ export class DashboardComponent implements OnInit {
     this.service.logout('Logout Successfull', 'logout')
     this.overlayPanel.hide();
   }
-  tabClick() {
-    this.sidebarVisible = false;
-  }
-  tabClick1(arg:string){
+  tabClick(arg:string){
+    this.shared.getRoles();
     if(arg == 'logout'){
       this.service.logout('Logout Successfull', 'logout')
     } else if(arg == 'Timesheet'){
@@ -54,6 +51,9 @@ export class DashboardComponent implements OnInit {
       this.roter.navigate(['/Admin'])
     }
     this.overlayPanel.hide();
+    setTimeout(() => {
+      this.roleTabs = this.shared.rolesTabs;
+    }, 200);
   };
-  
+
 }

@@ -64,6 +64,7 @@ table thead tr {
 .projectTable td {
   border: 1px solid white;
   padding: 8px;
+  word-break: break-all;
 }
 
 .projectTable tr:hover {

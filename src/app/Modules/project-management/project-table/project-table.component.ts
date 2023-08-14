@@ -4,8 +4,9 @@ import { ToastrService } from 'ngx-toastr';
 import { ConfirmEventType, ConfirmationService } from 'primeng/api';
 import { ApiService } from 'src/app/Services/api.service';
 import { DatePipe, Location } from "@angular/common";
-import {DynamicDialogRef} from 'primeng/dynamicdialog';
+import { DynamicDialogRef } from 'primeng/dynamicdialog';
 import { SharedService } from 'src/app/Services/shared.service';
+import { HttpEventType, HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-project-table',
@@ -18,36 +19,156 @@ export class ProjectTableComponent implements OnInit {
   searchText: string = '';
   visible: string = 'none';
   isSave: string = 'Save';
-  updateId:number=0;
-  userName:string='';
+  updateId: number = 0;
+  userName: string = '';
+  clientsArr: any = [];
+  projStatus: any = [];
+  submitted: boolean = false;
+  yearArr: any = [];
 
   ref: DynamicDialogRef | undefined;
 
   projectForm = this.fb.group({
-    projectname: [''],
-    clientname: [''],
-    financialyear: [''],
+    projectname: ['', Validators.required],
+    clientname: ['', Validators.required],
+    financialyear: ['', Validators.required],
     ponumber: [''],
     poamount: [''],
-    projectstatus: [''],
+    projectstatus: ['', Validators.required],
     postatus: [''],
     poclearedpercentage: [''],
     actualstartdate: [''],
     actualenddate: [''],
-    planenddate: [''],
-    planstartdate: [''],
-    holdfrom: [''],
-    resumefrom: [''],
-    discardedfrom: ['']
+    planenddate: ['', Validators.required],
+    planstartdate: ['', Validators.required],
+    holdfrom: ['', Validators.required],
+    resumefrom: ['', Validators.required],
+    discardedfrom: ['', Validators.required]
   });
 
   constructor(private api: ApiService, private tostr: ToastrService, private confirmationService: ConfirmationService,
-    private fb: FormBuilder, private dtPipe: DatePipe, private loacation:Location, private shared:SharedService) { }
+    private fb: FormBuilder, private dtPipe: DatePipe, private loacation: Location, private shared: SharedService) { }
 
   ngOnInit(): void {
     this.getProjects();
     this.userName = this.shared.userName;
+    setTimeout(() => {
+      this.getLov();
+    }, 500);
+    this.getYear();
+  };
+
+  getLov() {
+    let lovArr: any = this.shared.LOVArr;
+    for (let i = 0; i < lovArr.length; i++) {
+      switch (lovArr[i].type) {
+        case 'Client':
+          this.clientsArr.push(lovArr[i].lov_desc);
+          break;
+        case 'Project Status':
+          this.projStatus.push(lovArr[i].lov_desc);
+          break;
+      }
+    }
+  };
+
+  getYear() {
+    let currentYear1 = new Date().getFullYear();
+    let prevYear = currentYear1 - 1;
+    for (let s = prevYear; s <= currentYear1; currentYear1--) {
+      this.yearArr.push(currentYear1)
+    }
   }
+  selectedFiles?: FileList;
+  currentFile?: File;
+  progress = 0;
+  filePathBody: any = {};
+  docsArr:any =[{doc:'hiii'},{doc:'hello'}];
+
+  uploadDoc(e: any) {
+    this.progress = 0;
+    let selectedFiles = e.target.files
+    const file: File | null = selectedFiles.item(0);
+
+    if (file) {
+      this.currentFile = file;
+
+      this.api.postDocs(this.currentFile).subscribe({
+        next: (event: any) => {
+          if (event.type === HttpEventType.UploadProgress) {
+            this.progress = Math.round((100 * event.loaded) / event.total);
+          } else if (event instanceof HttpResponse) {
+            // this.fileInfos = this.api.getFiles();
+            this.filePathBody = event.body;
+            this.docsArr.push({docname : event.body.docname})
+            this.currentFile = undefined;
+          }
+        },
+        error: (err: any) => {
+          console.log(err);
+          this.progress = 0;
+
+          if (err.error && err.error.message) {
+            // this.message = err.error.message;
+          } else {
+            // this.message = 'Could not upload the file!';
+          }
+          this.currentFile = undefined;
+        },
+      });
+    }
+    this.selectedFiles = undefined;
+  };
+
+  saveDocs(projectId:string,type:string) {
+    let data = {
+      docname: this.filePathBody.docname,
+      docpath: this.filePathBody.docpath,
+      doctype: this.filePathBody.doctype,
+      entitygeneratedid: projectId,
+      entityname: 'Project',
+      uploadedby: this.userName,
+      uploadedon: this.dtPipe.transform(new Date(), 'dd-MM-yyyy')
+    }
+    this.api.saveDoc(data).subscribe({
+      next: (res: any) => {
+        let msg = type=='save'?'Project Saved Succesfully' : type=='update'?'Project Update Succesfully' : ''
+        this.tostr.success(msg);
+        this.getProjects();
+        this.closePopup();
+      },
+      error: (err: any) => {
+        this.tostr.error('Document Saving Failed')
+      }
+    });
+  };
+
+  getDocs(projId:number){
+    this.api.getDocs('Project',projId).subscribe({
+      next: (res: any) => {
+        this.docsArr = res;
+      },
+      error: (err: any) => {
+        this.tostr.error('Document getting failed');
+      }
+    });
+  };
+
+  downloadFile(fileName:string){
+    this.api.downloadDocs(fileName).subscribe({
+      next: (blob: Blob) => {
+        const a = document.createElement('a')
+        const objectUrl = URL.createObjectURL(blob)
+        a.href = objectUrl
+        a.download = fileName;
+        a.click();
+        URL.revokeObjectURL(objectUrl);
+      },
+      error: (err: any) => {
+        this.tostr.error('Document downloading failed')
+      }
+    })
+  };
 
   getProjects() {
     this.api.getProjects().subscribe({
@@ -55,19 +176,53 @@ export class ProjectTableComponent implements OnInit {
         this.projects = res;
       },
       error: (err: any) => {
-        this.tostr.error('Something went wrong')
+        this.tostr.error('Something went wrong');
       }
     })
-  }
+  };
+
+  selectProjStatus() {
+    let type = this.controls('projectstatus');
+    if (type == 'InProgress') {
+      this.projectForm.get('holdfrom')?.clearValidators();
+      this.projectForm.get('holdfrom')?.updateValueAndValidity();
+      this.projectForm.get('discardedfrom')?.clearValidators();
+      this.projectForm.get('discardedfrom')?.updateValueAndValidity();
+      this.projectForm.get('resumefrom')?.setValidators(Validators.required);
+      this.projectForm.get('resumefrom')?.updateValueAndValidity();
+    } else if (type == 'Hold') {
+      this.projectForm.get('resumefrom')?.clearValidators();
+      this.projectForm.get('resumefrom')?.updateValueAndValidity();
+      this.projectForm.get('discardedfrom')?.clearValidators();
+      this.projectForm.get('discardedfrom')?.updateValueAndValidity();
+      this.projectForm.get('holdfrom')?.setValidators(Validators.required);
+      this.projectForm.get('holdfrom')?.updateValueAndValidity();
+    }
+    else if (type == 'Discarded') {
+      this.projectForm.get('resumefrom')?.clearValidators();
+      this.projectForm.get('resumefrom')?.updateValueAndValidity();
+      this.projectForm.get('holdfrom')?.clearValidators();
+      this.projectForm.get('holdfrom')?.updateValueAndValidity();
+      this.projectForm.get('discardedfrom')?.setValidators(Validators.required);
+      this.projectForm.get('discardedfrom')?.updateValueAndValidity();
+    } else {
+      this.projectForm.get('holdfrom')?.clearValidators();
+      this.projectForm.get('holdfrom')?.updateValueAndValidity();
+      this.projectForm.get('resumefrom')?.clearValidators();
+      this.projectForm.get('resumefrom')?.updateValueAndValidity();
+      this.projectForm.get('discardedfrom')?.clearValidators();
+      this.projectForm.get('discardedfrom')?.updateValueAndValidity();
+    }
+  };
 
   clearText() {
     this.searchText = '';
   }
-  back(){
+  back() {
     this.loacation.back();
   }
 
-  deleteProjects(obj:any) {
+  deleteProjects(obj: any) {
     this.confirmationService.confirm({
       message: `Are you sure that you want to delete ${obj.projectname} Project?`,
       header: 'Confirmation',
@@ -93,7 +248,7 @@ export class ProjectTableComponent implements OnInit {
       }
     });
   };
-  closePopup(){
+  closePopup() {
     this.visible = 'none'
     this.projectForm.reset();
   }
@@ -101,6 +256,7 @@ export class ProjectTableComponent implements OnInit {
     this.isSave = 'Save';
     this.visible = 'block'
     this.projectForm.reset();
+    this.docsArr =[];
   }
   projectClick(obj: any) {
     this.visible = 'block'
@@ -123,7 +279,7 @@ export class ProjectTableComponent implements OnInit {
       resumefrom: this.shared.convertToIST(obj.resumefrom),
       discardedfrom: this.shared.convertToIST(obj.discardedfrom)
     })
-
+    this.getDocs(this.updateId);
   }
 
   clearProjects() {
@@ -132,8 +288,23 @@ export class ProjectTableComponent implements OnInit {
   }
 
   saveProjects() {
+    this.submitted = false;
+    this.selectProjStatus();
+    if (this.projectForm.invalid) {
+      this.tostr.warning("Please enter all mandatory fields");
+      this.submitted = true;
+      return;
+    }
+    if (this.shared.fromToDateValid(this.controls('planstartdate'), this.controls('planenddate'))) {
+      this.projectForm.patchValue({ planenddate: '' });
+      return;
+    }
+    if (this.shared.fromToDateValid(this.controls('actualstartdate'), this.controls('actualenddate'))) {
+      this.projectForm.patchValue({ actualenddate: '' });
+      return;
+    }
     var dataObj = {
-      "id" : this.updateId ? this.updateId : '',
+      "id": this.isSave == 'Save' ? '' : this.updateId,
       "projectname": this.projectForm.controls['projectname'].value,
       "clientname": this.projectForm.controls['clientname'].value,
       "financialyear": this.projectForm.controls['financialyear'].value,
@@ -149,32 +320,28 @@ export class ProjectTableComponent implements OnInit {
       "holdfrom": this.dtPipe.transform(this.projectForm.controls['holdfrom'].value, 'dd-MM-yyyy'),
       "resumefrom": this.dtPipe.transform(this.projectForm.controls['resumefrom'].value, 'dd-MM-yyyy'),
       "discardedfrom": this.dtPipe.transform(this.projectForm.controls['discardedfrom'].value, 'dd-MM-yyyy'),
-      "createdby" : this.userName,
-      "createdon" : this.dtPipe.transform(new Date(), 'dd-MM-yyyy'),
-      "updatedby" : '',
-      "updatedon" : ''
+      "createdby": this.userName,
+      "createdon": this.dtPipe.transform(new Date(), 'dd-MM-yyyy'),
+      "updatedby": '',
+      "updatedon": ''
     }
 
     if (this.isSave == 'Save') {
       this.api.postProjects(dataObj).subscribe({
         next: (res: any) => {
-          this.tostr.success('Project Saved Succesfully');
-          this.getProjects();
-          this.closePopup();
+          this.saveDocs(res.projectId,'save');
         },
         error: (err: any) => {
           this.tostr.error(err.error ? err.error : 'Something went wrong');
         }
       })
-    } else if(this.isSave == 'Update') {
+    } else if (this.isSave == 'Update') {
       dataObj.updatedby = this.userName;
       dataObj.updatedon = this.dtPipe.transform(new Date(), 'dd-MM-yyyy') || '';
 
-      this.api.updateProjects(dataObj,  this.updateId).subscribe({
+      this.api.updateProjects(dataObj, this.updateId).subscribe({
         next: (res: any) => {
-          this.tostr.success('Project Updated Succesfully');
-          this.getProjects();
-          this.closePopup();
+          this.saveDocs(this.updateId.toString(),'update');
         },
         error: (err: any) => {
           this.tostr.error('Something Went Wrong');
@@ -182,6 +349,10 @@ export class ProjectTableComponent implements OnInit {
       })
     }
   };
+
+  controls(formControl: string) {
+    return this.projectForm.controls[formControl].value;
+  }
 
   toStr(data: string | null | undefined) {
     if (data != undefined && data != null && data != "") {

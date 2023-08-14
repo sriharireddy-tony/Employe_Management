@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ToastrModule } from 'ngx-toastr';
 import { SharedModule } from './shared.module';
-// import { AuthModule } from './Modules/auth/auth.module';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './Components/home/home.component';
 import { TokenHandlingInterceptor } from './Interceptors/token-handling.interceptor';

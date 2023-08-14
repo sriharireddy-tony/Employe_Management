@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmEventType, ConfirmationService } from 'primeng/api';
@@ -20,13 +20,15 @@ export class TaskCreateComponent implements OnInit {
   tasksList: any = [];
   isSave: string = 'Save';
   updateId: number = 0;
+  submitted: boolean = false;
+  projStatus: any = [];
 
   taskForm = this.fb.group({
-    task: [''],
-    tasktype: [''],
-    planstartdate: [''],
-    planenddate: [''],
-    taskstatus: [''],
+    task: ['', Validators.required],
+    tasktype: ['', Validators.required],
+    planstartdate: ['', Validators.required],
+    planenddate: ['', Validators.required],
+    taskstatus: [null, Validators.required],
     actualstartdate: [''],
     actualenddate: [''],
     holdfrom: [''],
@@ -45,13 +47,73 @@ export class TaskCreateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    setTimeout(() => {
+      this.getLov();
+    }, 500);
   }
 
   clear() {
     this.taskForm.reset();
   }
+  getLov() {
+    let lovArr: any = this.shared.LOVArr;
+    for (let i = 0; i < lovArr.length; i++) {
+      switch (lovArr[i].type) {
+        case 'Project Status':
+          this.projStatus.push(lovArr[i].lov_desc);
+          break;
+      }
+    }
+  };
+  selectProjStatus() {
+    let type = this.controls('taskstatus');
+    if (type == 'InProgress') {
+      this.taskForm.get('holdfrom')?.clearValidators();
+      this.taskForm.get('holdfrom')?.updateValueAndValidity();
+      this.taskForm.get('discardedfrom')?.clearValidators();
+      this.taskForm.get('discardedfrom')?.updateValueAndValidity();
+      this.taskForm.get('resumefrom')?.setValidators(Validators.required);
+      this.taskForm.get('resumefrom')?.updateValueAndValidity();
+    } else if (type == 'Hold') {
+      this.taskForm.get('resumefrom')?.clearValidators();
+      this.taskForm.get('resumefrom')?.updateValueAndValidity();
+      this.taskForm.get('discardedfrom')?.clearValidators();
+      this.taskForm.get('discardedfrom')?.updateValueAndValidity();
+      this.taskForm.get('holdfrom')?.setValidators(Validators.required);
+      this.taskForm.get('holdfrom')?.updateValueAndValidity();
+    }
+    else if (type == 'Discarded') {
+      this.taskForm.get('resumefrom')?.clearValidators();
+      this.taskForm.get('resumefrom')?.updateValueAndValidity();
+      this.taskForm.get('holdfrom')?.clearValidators();
+      this.taskForm.get('holdfrom')?.updateValueAndValidity();
+      this.taskForm.get('discardedfrom')?.setValidators(Validators.required);
+      this.taskForm.get('discardedfrom')?.updateValueAndValidity();
+    } else {
+      this.taskForm.get('holdfrom')?.clearValidators();
+      this.taskForm.get('holdfrom')?.updateValueAndValidity();
+      this.taskForm.get('resumefrom')?.clearValidators();
+      this.taskForm.get('resumefrom')?.updateValueAndValidity();
+      this.taskForm.get('discardedfrom')?.clearValidators();
+      this.taskForm.get('discardedfrom')?.updateValueAndValidity();
+    }
+  };
   save() {
+    this.selectProjStatus();
+    this.submitted = false;
+    if (this.taskForm.invalid) {
+      this.tostr.warning("Please enter all mandatory fields");
+      this.submitted = true;
+      return;
+    }
+    if (this.shared.fromToDateValid(this.controls('planstartdate'), this.controls('planenddate'))) {
+      this.taskForm.patchValue({ planenddate: '' });
+      return;
+    }
+    if (this.shared.fromToDateValid(this.controls('actualstartdate'), this.controls('actualenddate'))) {
+      this.taskForm.patchValue({ actualenddate: '' });
+      return;
+    }
     let dataObj = this.taskForm.value;
     dataObj.id = this.isSave == 'Save' ? '' : this.updateId;
     dataObj.actualstartdate = this.dtPipe.transform(dataObj.actualstartdate, 'dd-MM-yyyy');
@@ -129,30 +191,34 @@ export class TaskCreateComponent implements OnInit {
   }
 
   deleteTask(obj: any) {
-      this.confirmationService.confirm({
-        message: `Are you sure that you want to delete ${obj.task} task?`,
-        header: 'Confirmation',
-        icon: 'pi pi-exclamation-triangle',
-        accept: () => {
-          this.api.deleteTask(obj.id).subscribe({
-            next: (res: any) => {
-              this.tostr.success('Project Deleted Succesfully');
-              this.getTasks();
-            },
-            error: (err: any) => {
-              this.tostr.error('Project Deletion Failed');
-            }
-          })
-        },
-        reject: (type: any) => {
-          switch (type) {
-            case ConfirmEventType.REJECT:
-              break;
-            case ConfirmEventType.CANCEL:
-              break;
+    this.confirmationService.confirm({
+      message: `Are you sure that you want to delete ${obj.task} task?`,
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.api.deleteTask(obj.id).subscribe({
+          next: (res: any) => {
+            this.tostr.success('Project Deleted Succesfully');
+            this.getTasks();
+          },
+          error: (err: any) => {
+            this.tostr.error('Project Deletion Failed');
           }
+        })
+      },
+      reject: (type: any) => {
+        switch (type) {
+          case ConfirmEventType.REJECT:
+            break;
+          case ConfirmEventType.CANCEL:
+            break;
         }
-      });
+      }
+    });
   };
+  controls(formControl: string) {
+    return this.taskForm.controls[formControl].value;
+  }
+
 
 }

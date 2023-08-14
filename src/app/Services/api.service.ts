@@ -1,6 +1,7 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
+import { Observable, catchError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -86,7 +87,7 @@ export class ApiService {
   postTask(data: any) {
     return this.http.post(`${this.URI}/task/add`, data);
   }
-  getTask(id:number) {
+  getTask(id: number) {
     return this.http.get(`${this.URI}/task/all?Project_id=${id}`);
   }
   updateTask(data: any) {
@@ -96,20 +97,50 @@ export class ApiService {
     return this.http.delete(`${this.URI}/task/delete/${id}`);
   }
 
-  getDetails(userName:string) {
+  getDetails(userName: string) {
     return this.http.get(`${this.URI}/employee/getemployeesbyempname?empname=${userName}`);
   }
   postTimesheet(data: any) {
     return this.http.post(`${this.URI}/timesheet/add`, data);
   }
-  getTimesheet(obj:any) {
-    return this.http.get(`${this.URI}/timesheet/all?name=${obj.name}&financialyear=${obj.financialyear}&month=${obj.month}`);
+  getTimesheet(obj: any) {
+    return this.http.get(`${this.URI}/timesheet/timesheetbyid?name=${obj.name}&financialyear=${obj.financialyear}&month=${obj.month}`);
   }
   updateTimesheet(data: any) {
     return this.http.put(`${this.URI}/timesheet/update`, data);
   }
   deleteTimesheet(id: number) {
     return this.http.delete(`${this.URI}/timesheet/delete/${id}`);
+  }
+
+  postDocs(file: File): Observable<HttpEvent<any>> {
+    const formData: FormData = new FormData();
+    formData.append('file', file, file.name);
+
+    const headers = new HttpHeaders().append('Content-Type', 'multipart/form-data');
+
+    return this.http.post(`${this.URI}/document/upload`, formData, {
+      headers: headers,
+      reportProgress: true,
+      observe: 'events',
+      responseType: 'json'
+    });
+  };
+  saveDoc(data: any) {
+    return this.http.post(`${this.URI}/document/add`, data);
+  }
+  getDocs(projName:string,projId:number) {
+    return this.http.get(`${this.URI}/document/docbyid?entityname=${projName}&entitygeneratedid=${projId}`);
+  }
+
+  downloadDocs(file: any): Observable<Blob> {
+    const headers = new HttpHeaders()
+      .set('Content-Type', 'application/json')
+
+    return this.http.get(`${this.URI}/document/download/${file}`, {
+      headers: headers,
+      responseType: 'blob'
+    });
   }
 
 }

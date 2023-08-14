@@ -18,7 +18,7 @@ const routes: Routes = [
     loadChildren: () => import('./Modules/employee-management/employee-management.module').then(m => m.EmployeeManagementModule)
   },
   {
-    path: 'Dashboard',
+    path: 'Admin',
     loadChildren: () => import('./Modules/dashboard/dashboard.module').then(m => m.DashboardModule)
   },
   {

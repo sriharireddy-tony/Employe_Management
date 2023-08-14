@@ -1,6 +1,6 @@
 import { DatePipe, Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmEventType, ConfirmationService } from 'primeng/api';
 import { ApiService } from 'src/app/Services/api.service';
@@ -24,14 +24,16 @@ export class EmployeeTableComponent implements OnInit, OnDestroy {
   statusArr: any = [];
   clientsArr: any = [];
   roles: any = [];
-  submitted:boolean=false;
+  submitted: boolean = false;
+  selectedRoles: string = '';
+  selectedArr: any = [];
 
   employeeForm = this.fb.group({
     empid: ['', Validators.required],
     empname: ['', Validators.required],
-    email: ['', [Validators.required,Validators.pattern(/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)]],
-    password: ['', Validators.required],
-    mobileno: ['', Validators.required],
+    email: ['', [Validators.required, Validators.pattern(/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)]],
+    // password: ['', Validators.required],
+    mobileno: ['', [Validators.required, this.mobileNumberValidator]],
     reportingmanager: ["", Validators.required],
     joiningdate: ['', Validators.required],
     status: [null, Validators.required],
@@ -39,6 +41,18 @@ export class EmployeeTableComponent implements OnInit, OnDestroy {
     client: [null, Validators.required],
     roles: [null, Validators.required]
   });
+
+  mobileNumberValidator(control: AbstractControl): { [key: string]: boolean } | null {
+    const value = control.value;
+    if (value && !/^\d{10}$/.test(value)) {
+      return { 'invalidMobileNumber': true };
+    }
+    return null;
+  }
+
+  get mobileno() {
+    return this.employeeForm.get('mobileno');
+  }
 
   constructor(private api: ApiService, private tostr: ToastrService, private confirmationService: ConfirmationService,
     private fb: FormBuilder, private dtPipe: DatePipe, private loacation: Location, private shared: SharedService) { }
@@ -64,6 +78,19 @@ export class EmployeeTableComponent implements OnInit, OnDestroy {
     })
   }
 
+  selectRoles(e: any) {
+    if (this.selectedArr.length !=0) {
+      if (this.selectedArr.includes(e.itemValue.role)) {
+        this.selectedArr.splice(this.selectedArr.indexOf(e.itemValue.role), 1)
+      } else {
+        this.selectedArr.push(e.itemValue.role)
+      }
+    } else {
+      this.selectedArr.push(e.itemValue.role)
+    }
+    this.selectedRoles = this.selectedArr.toString();
+  }
+
   getLov() {
     let lovArr: any = this.shared.LOVArr;
     for (let i = 0; i < lovArr.length; i++) {
@@ -78,7 +105,7 @@ export class EmployeeTableComponent implements OnInit, OnDestroy {
           this.clientsArr.push(lovArr[i].lov_desc);
           break;
         case 'Roles':
-          this.roles.push(lovArr[i].lov_desc);
+          this.roles.push({ role: lovArr[i].lov_desc });
           break;
       }
     }
@@ -135,16 +162,25 @@ export class EmployeeTableComponent implements OnInit, OnDestroy {
       empid: obj.empid,
       empname: obj.empname,
       email: obj.email,
-      password: obj.password,
+      // password: obj.password,
       mobileno: obj.mobileno,
       reportingmanager: obj.reportingmanager,
       joiningdate: this.shared.convertToIST(obj.joiningdate),
       status: obj.status,
       inactivefrom: this.shared.convertToIST(obj.inactivefrom),
       client: obj.client,
-      roles: obj.roles,
+      roles: this.rolesFun(obj.roles),
     })
-
+  }
+  rolesFun(str: string) {
+    this.selectedArr =[];
+    let arr: any = [];
+    str.split(',').forEach((item: string) => {
+      this.selectedArr.push(item);
+      arr.push({ role: item })
+    })
+    this.selectedRoles = this.selectedArr.toString();
+    return arr;
   }
 
   clearEmployees() {
@@ -165,12 +201,12 @@ export class EmployeeTableComponent implements OnInit, OnDestroy {
       "empid": +this.employeeForm.controls['empid'].value,
       "empname": this.employeeForm.controls['empname'].value,
       "email": this.employeeForm.controls['email'].value,
-      "password": this.employeeForm.controls['password'].value,
+      // "password": this.employeeForm.controls['password'].value,
       "mobileno": this.employeeForm.controls['mobileno'].value,
       "reportingmanager": typeof (RM) == 'string' ? RM : typeof (RM) == 'object' ? RM['type'] : RM,
       "status": this.employeeForm.controls['status'].value,
       "client": this.employeeForm.controls['client'].value,
-      "roles": this.employeeForm.controls['roles'].value,
+      "roles": this.selectedRoles,
       "joiningdate": this.dtPipe.transform(this.employeeForm.controls['joiningdate'].value, 'dd-MM-yyyy'),
       "inactivefrom": this.dtPipe.transform(this.employeeForm.controls['inactivefrom'].value, 'dd-MM-yyyy')
     }
@@ -201,7 +237,7 @@ export class EmployeeTableComponent implements OnInit, OnDestroy {
     }
   };
 
-  controls(formControl:string){
+  controls(formControl: string) {
     return this.employeeForm.controls[formControl].value;
   }
 

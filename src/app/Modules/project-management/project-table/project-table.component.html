@@ -15,22 +15,31 @@
         <form [formGroup]="projectForm">
           <div class="row px-4 py-3" style="width: 100%;">
             <div class="col-lg-3">
-              <h6>Project Name</h6>
-              <input type="text" class="form-control" formControlName="projectname">
+              <h6>Project Name<sup class="redStar">*</sup></h6>
+              <input type="text" class="form-control" formControlName="projectname"
+                [ngClass]="{'borderRed':!controls('projectname')&&submitted}">
             </div>
             <div class="col-lg-3">
-              <h6>Client</h6>
-              <input type="text" class="form-control" formControlName="clientname">
+              <h6>Client<sup class="redStar">*</sup></h6>
+              <select class="form-select" formControlName="clientname"
+                [ngClass]="{'borderRed':!controls('clientname')&&submitted}">
+                <option value=null>Select Client</option>
+                <option [value]="item" *ngFor="let item of clientsArr">{{item}}</option>
+              </select>
             </div>
             <div class="col-lg-3">
-              <h6>Plan start date</h6>
-              <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy" class="date"
-                formControlName="planstartdate"></p-calendar>
+              <h6>Plan start date<sup class="redStar">*</sup></h6>
+              <div [ngClass]="{'borderRed':!controls('planstartdate')&&submitted}">
+                <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy" class="date"
+                  formControlName="planstartdate"></p-calendar>
+              </div>
             </div>
             <div class="col-lg-3">
-              <h6>Plan end date</h6>
-              <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy" class="date"
-                formControlName="planenddate"></p-calendar>
+              <h6>Plan end date<sup class="redStar">*</sup></h6>
+              <div [ngClass]="{'borderRed':!controls('planenddate')&&submitted}">
+                <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy" class="date"
+                  formControlName="planenddate"></p-calendar>
+              </div>
             </div>
           </div>
           <div class="row px-4 py-3" style="width: 100%;">
@@ -45,8 +54,12 @@
                 formControlName="actualenddate"></p-calendar>
             </div>
             <div class="col-lg-3">
-              <h6>Financial Year</h6>
-              <input type="text" class="form-control" formControlName="financialyear">
+              <h6>Financial Year<sup class="redStar">*</sup></h6>
+              <select class="form-select" formControlName="financialyear" (change)="selectProjStatus()"
+                [ngClass]="{'borderRed':!controls('financialyear')&&submitted}">
+                <option value=null>Select Financial Year</option>
+                <option [value]="item" *ngFor="let item of yearArr">{{item}}</option>
+              </select>
             </div>
             <div class="col-lg-3">
               <h6>PO Number</h6>
@@ -59,8 +72,15 @@
               <input type="text" class="form-control" formControlName="poamount">
             </div>
             <div class="col-lg-3">
-              <h6>Project Status</h6>
-              <input type="text" class="form-control" formControlName="projectstatus">
+              <h6>Project Status<sup class="redStar">*</sup></h6>
+              <select class="form-select" formControlName="projectstatus" (change)="selectProjStatus()"
+                [ngClass]="{'borderRed':!controls('projectstatus')&&submitted}">
+                <option value=null>Select Project Status</option>
+                <option value="InProgress">In Progress</option>
+                <option value="Hold">Hold</option>
+                <option value="Discarded">Discarded</option>
+                <option [value]="item" *ngFor="let item of projStatus">{{item}}</option>
+              </select>
             </div>
             <div class="col-lg-3">
               <h6>PO Status</h6>
@@ -71,26 +91,56 @@
               <input type="text" class="form-control" formControlName="poclearedpercentage">
             </div>
           </div>
-          <div class="row px-4 py-3" style="width: 100%;padding-bottom: 25px !important;">
-            <div class="col-lg-3">
-              <h6>Hold From</h6>
-              <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy" class="date"
-                formControlName="holdfrom"></p-calendar>
+          <div class="row px-4 py-3 d-flex"
+            style="width: 100%;padding-bottom: 25px !important;justify-content: flex-start;">
+            <div class="col-lg-3" *ngIf="controls('projectstatus') == 'Hold'">
+              <h6>Hold From<sup class="redStar">*</sup></h6>
+              <div [ngClass]="{'borderRed':!controls('holdfrom')&&submitted}">
+                <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy" class="date"
+                  formControlName="holdfrom"></p-calendar>
+              </div>
             </div>
-            <div class="col-lg-3">
-              <h6>Resume From</h6>
-              <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy" class="date"
-                formControlName="resumefrom"></p-calendar>
+            <div class="col-lg-3" *ngIf="controls('projectstatus') == 'InProgress'">
+              <h6>Resume From<sup class="redStar">*</sup></h6>
+              <div [ngClass]="{'borderRed':!controls('resumefrom')&&submitted}">
+                <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy" class="date"
+                  formControlName="resumefrom"></p-calendar>
+              </div>
             </div>
-            <div class="col-lg-3">
-              <h6>Discarded From</h6>
-              <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy" class="date"
-                formControlName="discardedfrom"></p-calendar>
+            <div class="col-lg-3" *ngIf="controls('projectstatus') == 'Discarded'">
+              <h6>Discarded From<sup class="redStar">*</sup></h6>
+              <div [ngClass]="{'borderRed':!controls('discardedfrom')&&submitted}">
+                <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy" class="date"
+                  formControlName="discardedfrom"></p-calendar>
+              </div>
             </div>
-            <div class="col-lg-3 mt-4" style="justify-content: end;display: flex;">
+            <div class="col-lg-3 mt-4" style="justify-content: end;display: flex;height: 40px;">
               <button class="btn btn-outline-danger px-4" style="margin-right: 20px;" (click)="clearProjects()">
                 Clear</button>
               <button class="btn btn-primary px-4" (click)="saveProjects()">{{isSave}}</button>
+            </div>
+            <div class="col-lg-6 d-flex justify-content-between"
+              style="border: 1px solid #ddd;width: 48% !important;margin-left: 15px;">
+              <div>
+                <div *ngFor="let obj of docsArr" class="hyperLink">
+                  <h6 (click)="downloadFile(obj.docname)">{{obj.docname}}</h6>
+                </div>
+              </div>
+              <div class="mt-2">
+                <form action="/form/sumbit" method="get" style="width: 125px;">
+                  <label for="upload" class="label">
+                    <div *ngIf="currentFile" class="progress">
+                      <div class="progress-bar progress-bar-info" role="progressbar" attr.aria-valuenow="{{ progress }}"
+                        aria-valuemin="0" aria-valuemax="100" [ngStyle]="{ width: progress + '%' }"> {{ progress }}%
+                      </div>
+                    </div>
+                    <div *ngIf="!currentFile">
+                      Upload File
+                    </div>
+                  </label>
+                  <input type="file" name="photo" id="upload" (change)="uploadDoc($event)" />
+                </form>
+              </div>
             </div>
           </div>
         </form>
@@ -105,7 +155,7 @@
   <div style="width: 220px;">
     <button class="btn btn-primary" (click)="createProject()">Create Project</button>
   </div>
-  <div style="width: 100%;">
+  <div style="width: 100%;" class="boxShadow">
     <input class="form-control" type="text" placeholder="Search..." [(ngModel)]="searchText">
     <i class="fa-solid fa-magnifying-glass" *ngIf="!searchText"></i>
     <i class="fa-solid fa-xmark" style="color: #ff0000;" *ngIf="searchText" (click)="clearText()"></i>
@@ -147,7 +197,8 @@
       <ng-template pTemplate="body" let-obj let-i="rowIndex">
         <tr [ngClass]="{ 'even-row': i % 2 === 0, 'odd-row': i % 2 !== 0 }">
           <td style="min-width:50px" pFrozenColumn>{{i+1}}</td>
-          <td style="min-width:250px" class="hyperLink" pFrozenColumn routerLink="/Project_Management/taskCreate" [queryParams]="{ ProjctId: obj.id, ProjectName: obj.projectname }">{{obj.projectname}}</td>
+          <td style="min-width:250px" class="hyperLink" pFrozenColumn routerLink="/Project_Management/taskCreate"
+            [queryParams]="{ ProjctId: obj.id, ProjectName: obj.projectname }">{{obj.projectname}}</td>
           <td style="min-width:210px" pFrozenColumn>{{obj.clientname}}</td>
           <td style="min-width:140px">{{obj.planstartdate}}</td>
           <td style="min-width:140px">{{obj.planenddate}}</td>
@@ -166,7 +217,7 @@
           <td style="min-width:130px">{{obj.updatedby}}</td>
           <td style="min-width:130px">{{obj.createdon}}</td>
           <td style="min-width:130px">{{obj.updatedon}}</td>
-          <td style="min-width:80px"> 
+          <td style="min-width:80px">
             <i class="fa-solid fa-pen-to-square updateBtn" (click)="projectClick(obj)"></i>
             <i class="fa-solid fa-trash" style="margin-right: 10px;" (click)="deleteProjects(obj)"></i>
           </td>

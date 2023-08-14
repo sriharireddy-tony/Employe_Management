@@ -50,6 +50,7 @@ export class EmployeeTimesheetComponent implements OnInit {
   }
 
   addTimesheet() {
+    this.updateObj = {};
     this.setDates();
     this.timeSheet.push({
       id: '', empid: '', reportingmanager: '', project: '', task: '', client: '', remarks: '', financialyear: '',
@@ -81,9 +82,12 @@ export class EmployeeTimesheetComponent implements OnInit {
     this.dateAndDayArray = [];
     let currentYear1 = +this.currentYear;
     let month = this.monthArr.indexOf(this.currentMonth) + 1;
-    let lastDay = new Date(currentYear1, month, 0).getDate();
+    // let lastDay = new Date(currentYear1, month, 0).getDate();
 
-    for (let day = 1; day <= lastDay; day++) {
+    var today = new Date();
+    var dd = +String(today.getDate()).padStart(2, '0');
+
+    for (let day = 1; day <= dd; day++) {
       let date = new Date(currentYear1, month - 1, day);
       let dayName = date.toLocaleString('en-US', { weekday: 'long' });
 
@@ -194,6 +198,7 @@ export class EmployeeTimesheetComponent implements OnInit {
 
     this.api.updateTimesheet(this.timeSheet[i]).subscribe({
       next: (res: any) => {
+        this.updateObj = {};
         this.toast.success('Timesheet Updated Successfully');
         this.getTimesheet();
       }, error: (err: any) => {

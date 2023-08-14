@@ -7,23 +7,27 @@
     <form [formGroup]="taskForm">
         <div class="row mt-3">
             <div class="col-lg-3">
-                <h6>Task</h6>
-                <input type="text" class="form-control" formControlName="task">
+                <h6>Task<sup class="redStar">*</sup></h6>
+                <input type="text" class="form-control" formControlName="task"  [ngClass]="{'borderRed':!controls('task')&&submitted}">
             </div>
             <div class="col-lg-3">
-                <h6>Task Type</h6>
-                <input type="text" class="form-control" formControlName="tasktype">
+                <h6>Task Type<sup class="redStar">*</sup></h6>
+                <input type="text" class="form-control" formControlName="tasktype"  [ngClass]="{'borderRed':!controls('tasktype')&&submitted}">
             </div>
             <div class="col-lg-3">
-                <h6>Plan Start Date</h6>
+                <h6>Plan Start Date<sup class="redStar">*</sup></h6>
+                <div  [ngClass]="{'borderRed':!controls('planstartdate')&&submitted}">
                 <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy"
                     class="date" formControlName="planstartdate"></p-calendar>
             </div>
+        </div>
             <div class="col-lg-3">
-                <h6>Plan End Date</h6>
+                <h6>Plan End Date<sup class="redStar">*</sup></h6>
+                <div  [ngClass]="{'borderRed':!controls('planenddate')&&submitted}">
                 <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy"
                     class="date" formControlName="planenddate"></p-calendar>
             </div>
+        </div>
         </div>
         <div class="row mt-3">
             <div class="col-lg-3">
@@ -31,8 +35,15 @@
                 <input type="text" class="form-control" disabled [value]="projectName">
             </div>
             <div class="col-lg-3">
-                <h6>Task Status</h6>
-                <input type="text" class="form-control" formControlName="taskstatus">
+                <h6>Task Status<sup class="redStar">*</sup></h6>
+                <select class="form-select" formControlName="taskstatus" (change)="selectProjStatus()"
+                [ngClass]="{'borderRed':!controls('taskstatus')&&submitted}">
+                <option value=null>Select Project Status</option>
+                <option value="InProgress">In Progress</option>
+                <option value="Hold">Hold</option>
+                <option value="Discarded">Discarded</option>
+                <option [value]="item" *ngFor="let item of projStatus">{{item}}</option>
+              </select>
             </div>
             <div class="col-lg-3">
                 <h6>Actual Start Date</h6>
@@ -46,21 +57,27 @@
             </div>
         </div>
         <div class="row mt-3">
-            <div class="col-lg-3">
-                <h6>Hold From</h6>
+            <div class="col-lg-3" *ngIf="controls('taskstatus') == 'Hold'">
+                <h6>Hold From<sup class="redStar">*</sup></h6>
+                <div  [ngClass]="{'borderRed':!controls('holdfrom')&&submitted}">
                 <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy"
                     class="date" formControlName="holdfrom"></p-calendar>
             </div>
-            <div class="col-lg-3">
-                <h6>Resume From</h6>
+        </div>
+            <div class="col-lg-3" *ngIf="controls('taskstatus') == 'InProgress'">
+                <h6>Resume From<sup class="redStar">*</sup></h6>
+                <div  [ngClass]="{'borderRed':!controls('resumefrom')&&submitted}">
                 <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy"
                     class="date" formControlName="resumefrom"></p-calendar>
             </div>
-            <div class="col-lg-3">
-                <h6>Discarded From</h6>
+        </div>
+            <div class="col-lg-3" *ngIf="controls('taskstatus') == 'Discarded'">
+                <h6>Discarded From<sup class="redStar">*</sup></h6>
+                <div  [ngClass]="{'borderRed':!controls('discardedfrom')&&submitted}">
                 <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy"
                     class="date" formControlName="discardedfrom"></p-calendar>
             </div>
+        </div>
             <div class="col-lg-3 mt-4">
                 <button class="btn btn-outline-danger px-4" (click)="clear()">Clear</button>
                 <button class="btn btn-primary mx-3 px-4" (click)="save()">{{isSave}}</button>

@@ -21,6 +21,8 @@ export class AppComponent {
     if (name) {
       let decodedToken = JSON.parse(atob(name.split('.')[1]));
       this.servShare.userName = decodedToken.sub;
+      this.servShare.getDetails();
+      this.servShare.getRoles();
     }
   }
 

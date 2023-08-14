@@ -205,7 +205,8 @@ p-confirmdialog>div>div>div.p-dialog-header>div>button>span {
   border-radius: 6px !important;
   height: 37px !important;
 }
-.autocomplete-container .input-container input{
+
+.autocomplete-container .input-container input {
   margin-top: 3px !important;
   height: 30px !important;
 }
@@ -269,3 +270,22 @@ p-accordiontab>div>div>a {
   border: none !important;
   padding: 0px 4px !important;
 }
+
+.p-multiselect {
+  width: 100% !important;
+  height: 37px !important;
+}
+
+.p-multiselect.p-multiselect-chip .p-multiselect-token {
+  padding: 0px 0px !important;
+  margin-top: 0px !important;
+}
+.p-multiselect .p-multiselect-label.p-placeholder{
+  padding: 6px !important;
+}
+.p-multiselect-panel .p-multiselect-header .p-multiselect-filter-container .p-inputtext {
+  padding: 2px 2px;
+}
+.boxShadow{
+  box-shadow: 5px 5px 10px grey !important;
+} 

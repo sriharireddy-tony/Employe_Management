@@ -9,7 +9,9 @@
             <div class="card">
                 <p-overlayPanel #op>
                     <div class="userOverlay">
-                        <h6 class="mb-0"  (click)="logout()">Logout</h6>
+                        <h6 class="py-1" *ngFor="let item of roleTabs" (click)="tabClick1(item)">{{item}}</h6>
+                        <hr/>
+                        <h6 class="mb-0" (click)="tabClick1('logout')">Logout</h6>
                     </div>
                 </p-overlayPanel>
                     <i class="fa-solid fa-user-gear" (click)="op.toggle($event)"></i>
@@ -19,7 +21,7 @@
 </div>
 <p-sidebar [(visible)]="sidebarVisible">
     <div class="sidebarTabs">
-    <h5 routerLink="/Dashboard/lovValues" routerLinkActive="tabHilight" (click)="tabClick()">LOV Update</h5>
+    <h5 routerLink="/Admin/lovValues" routerLinkActive="tabHilight" (click)="tabClick()">LOV Update</h5>
     <hr/>
     <h5 (click)="tabClick()" routerLinkActive="tabHilight">Teams Update</h5>
     <hr/>

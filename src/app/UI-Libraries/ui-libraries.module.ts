@@ -7,6 +7,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { SidebarModule } from 'primeng/sidebar';
 import {AutocompleteLibModule} from 'angular-ng-autocomplete';
 import { AccordionModule } from 'primeng/accordion';
+import { MultiSelectModule } from 'primeng/multiselect';
 
 @NgModule({
   declarations: [],
@@ -21,7 +22,8 @@ import { AccordionModule } from 'primeng/accordion';
     ConfirmDialogModule,
     SidebarModule,
     AutocompleteLibModule,
-    AccordionModule
+    AccordionModule,
+    MultiSelectModule
   ]
 })
 export class UILibrariesModule { }

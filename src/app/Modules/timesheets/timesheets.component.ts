@@ -12,6 +12,7 @@ export class TimesheetsComponent implements OnInit {
 
   @ViewChild('op') overlayPanel!: OverlayPanel;
   userName: string = '';
+  title:string = 'Employee management'
   
   constructor(private service: AuthService, private servShared:SharedService) { }
 

@@ -1,21 +1,3 @@
-<div class="head col-lg-12">
-    <div class="ps-2 mt-1"><img src="assets\Images\nb-logo.webp" height="40" width="50"  style="width:175%;height: 100%;"/></div>
-    <div class="dreamHide">
-        <h2 class="mt-1">Timesheet</h2>
-    </div>
-    <div class="pe-2 mt-1">
-        <div class="logout">
-            <h5 class="mt-2">{{userName}}</h5> &nbsp; &nbsp; &nbsp;
-            <div class="card">
-                <p-overlayPanel #op>
-                    <div class="userOverlay">
-                        <h6 class="mb-0"  (click)="logout()">Logout</h6>
-                    </div>
-                </p-overlayPanel>
-                    <i class="fa-solid fa-user-gear" (click)="op.toggle($event)"></i>
-            </div>
-    </div>
-    </div>
-</div>
+<app-header ></app-header>
 
 <router-outlet></router-outlet>

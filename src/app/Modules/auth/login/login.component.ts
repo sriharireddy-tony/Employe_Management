@@ -49,6 +49,7 @@ export class LoginComponent implements OnInit {
     if(name){
       let decodedToken = JSON.parse(atob(name.split('.')[1]));
       this.servShare.userName = decodedToken.sub;
+      this.servShare.getDetails();
     }
   }
 

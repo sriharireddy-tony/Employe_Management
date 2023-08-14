@@ -29,8 +29,7 @@ export class TokenHandlingInterceptor implements HttpInterceptor {
   addTokenHeader(request: HttpRequest<any>, token: any) {
     return request.clone({
       headers: new HttpHeaders({
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${token}`
       })
     });
   };

@@ -4,20 +4,20 @@
 
     <div class="tabs">
         <div style="display: flex;flex-flow: wrap;">
-            <div class="box" (click)="clickTab('Employee_Management')">
+            <div class="box" (click)="clickTab('Employee_Management')" *ngIf="tabHide('Employee')">
                 <h2>Employee management</h2>
             </div>
-            <div class="box" (click)="clickTab('Project_Management')">
+            <div class="box" (click)="clickTab('Project_Management')" *ngIf="tabHide('Project')">
                 <h2>Project management</h2>
             </div>
-            <div class="box" routerLink="/Jobcard">
+            <div class="box" routerLink="/Jobcard" *ngIf="tabHide('Jobcard')">
                 <h2>Job Card</h2>
             </div>
-            <div class="box" routerLink="/Timesheet">
+            <div class="box" routerLink="/Timesheet" *ngIf="tabHide('Timesheet')">
                 <h2>Timesheets</h2>
             </div>
-            <div class="box" routerLink="/Dashboard">
-                <h2>Dashboard</h2>
+            <div class="box" routerLink="/Admin" *ngIf="tabHide('Admin')">
+                <h2>Admin</h2>
             </div> 
         </div>
     </div>
