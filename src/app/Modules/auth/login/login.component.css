@@ -13,9 +13,9 @@
   }
 .tabs{
     position: absolute;
-    top: 22%;
-     /* left: 40%; */
+    /* top: 22%; */
     right: 5%;
+    bottom: 0%;
 }
 
 .form {
@@ -124,4 +124,11 @@ a:hover {
 }
 .signup:hover{
     color: #0033ff;
+}
+.pwBtn{
+  border: none;
+    background-color: transparent;
+    position: absolute;
+    bottom: 50%;
+    right: 14%;
 }

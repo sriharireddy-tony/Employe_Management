@@ -22,10 +22,12 @@ export class TaskCreateComponent implements OnInit {
   updateId: number = 0;
   submitted: boolean = false;
   projStatus: any = [];
+  taskType:any = [];
+  prevProjStatus:string ='';
 
   taskForm = this.fb.group({
     task: ['', Validators.required],
-    tasktype: ['', Validators.required],
+    tasktype: [null, Validators.required],
     planstartdate: ['', Validators.required],
     planenddate: ['', Validators.required],
     taskstatus: [null, Validators.required],
@@ -62,40 +64,43 @@ export class TaskCreateComponent implements OnInit {
         case 'Project Status':
           this.projStatus.push(lovArr[i].lov_desc);
           break;
+          case 'Task Type':
+          this.taskType.push(lovArr[i].lov_desc);
+          break;
       }
     }
   };
   selectProjStatus() {
     let type = this.controls('taskstatus');
-    if (type == 'InProgress') {
-      this.taskForm.get('holdfrom')?.clearValidators();
-      this.taskForm.get('holdfrom')?.updateValueAndValidity();
-      this.taskForm.get('discardedfrom')?.clearValidators();
-      this.taskForm.get('discardedfrom')?.updateValueAndValidity();
+
+    this.taskForm.get('holdfrom')?.clearValidators();
+    this.taskForm.get('holdfrom')?.updateValueAndValidity();
+    this.taskForm.get('resumefrom')?.clearValidators();
+    this.taskForm.get('resumefrom')?.updateValueAndValidity();
+    this.taskForm.get('discardedfrom')?.clearValidators();
+    this.taskForm.get('discardedfrom')?.updateValueAndValidity();
+    this.taskForm.get('actualstartdate')?.clearValidators();
+    this.taskForm.get('actualstartdate')?.updateValueAndValidity();
+    this.taskForm.get('actualenddate')?.clearValidators();
+    this.taskForm.get('actualenddate')?.updateValueAndValidity();
+
+    if (this.prevProjStatus == 'Hold' && type == 'InProgress') {
       this.taskForm.get('resumefrom')?.setValidators(Validators.required);
       this.taskForm.get('resumefrom')?.updateValueAndValidity();
     } else if (type == 'Hold') {
-      this.taskForm.get('resumefrom')?.clearValidators();
-      this.taskForm.get('resumefrom')?.updateValueAndValidity();
-      this.taskForm.get('discardedfrom')?.clearValidators();
-      this.taskForm.get('discardedfrom')?.updateValueAndValidity();
       this.taskForm.get('holdfrom')?.setValidators(Validators.required);
       this.taskForm.get('holdfrom')?.updateValueAndValidity();
-    }
-    else if (type == 'Discarded') {
-      this.taskForm.get('resumefrom')?.clearValidators();
-      this.taskForm.get('resumefrom')?.updateValueAndValidity();
-      this.taskForm.get('holdfrom')?.clearValidators();
-      this.taskForm.get('holdfrom')?.updateValueAndValidity();
+    } else if (type == 'Discarded') {
       this.taskForm.get('discardedfrom')?.setValidators(Validators.required);
       this.taskForm.get('discardedfrom')?.updateValueAndValidity();
-    } else {
-      this.taskForm.get('holdfrom')?.clearValidators();
-      this.taskForm.get('holdfrom')?.updateValueAndValidity();
-      this.taskForm.get('resumefrom')?.clearValidators();
-      this.taskForm.get('resumefrom')?.updateValueAndValidity();
-      this.taskForm.get('discardedfrom')?.clearValidators();
-      this.taskForm.get('discardedfrom')?.updateValueAndValidity();
+    } else if (type == 'InProgress') {
+      this.taskForm.get('actualstartdate')?.setValidators(Validators.required);
+      this.taskForm.get('actualstartdate')?.updateValueAndValidity();
+    } else if (type == 'Completed') {
+      this.taskForm.get('actualenddate')?.setValidators(Validators.required);
+      this.taskForm.get('actualenddate')?.updateValueAndValidity();
+      this.taskForm.get('actualstartdate')?.setValidators(Validators.required);
+      this.taskForm.get('actualstartdate')?.updateValueAndValidity();
     }
   };
   save() {
@@ -176,6 +181,7 @@ export class TaskCreateComponent implements OnInit {
   updateTask(obj: any) {
     this.isSave = 'Update';
     this.updateId = obj.id;
+    this.prevProjStatus = '';
     this.taskForm.patchValue({
       task: obj.task,
       tasktype: obj.tasktype,

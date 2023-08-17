@@ -24,7 +24,7 @@ export class HomeComponent implements OnInit {
     this.getUserName();
     setTimeout(() => {
       this.tabsClick = this.shared.rolesTabs
-    }, 100);
+    }, 300);
   }
   getUserName() {
     let name = localStorage.getItem('accessToken') || '';

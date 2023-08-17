@@ -288,4 +288,7 @@ p-accordiontab>div>div>a {
 }
 .boxShadow{
   box-shadow: 5px 5px 10px grey !important;
-} 
+}
+hr {
+  margin: 0.5rem 0 !important;
+}

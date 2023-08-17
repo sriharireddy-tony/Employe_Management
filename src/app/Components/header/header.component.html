@@ -2,7 +2,7 @@
     <div class="ps-2 mt-1"><img src="assets\Images\nb-logo.webp" height="40" width="50"
             style="width:175%;height: 100%;" /></div>
     <div class="dreamHide">
-        <h2 class="mt-1">Employee Management</h2>
+        <h2 class="mt-1">{{routeName}}</h2>
     </div>
     <div class="pe-2 mt-1">
         <div class="logout">
@@ -10,6 +10,8 @@
             <div class="card">
                 <p-overlayPanel #op>
                     <div class="userOverlay">
+                        <h6 class="py-1" (click)="tabClick('landingPage')">Landing Page</h6>
+                        <hr/>
                         <h6 class="py-1" *ngFor="let item of roleTabs" (click)="tabClick(item)">{{item}}</h6>
                         <hr/>
                         <h6 class="mb-0" (click)="tabClick('logout')">Logout</h6>

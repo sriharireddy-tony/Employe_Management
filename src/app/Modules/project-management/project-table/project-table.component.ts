@@ -25,6 +25,8 @@ export class ProjectTableComponent implements OnInit {
   projStatus: any = [];
   submitted: boolean = false;
   yearArr: any = [];
+  prevProjStatus: string = '';
+  POStatus: any = [];
 
   ref: DynamicDialogRef | undefined;
 
@@ -35,7 +37,7 @@ export class ProjectTableComponent implements OnInit {
     ponumber: [''],
     poamount: [''],
     projectstatus: ['', Validators.required],
-    postatus: [''],
+    postatus: [null],
     poclearedpercentage: [''],
     actualstartdate: [''],
     actualenddate: [''],
@@ -68,6 +70,9 @@ export class ProjectTableComponent implements OnInit {
         case 'Project Status':
           this.projStatus.push(lovArr[i].lov_desc);
           break;
+        case 'PO Status':
+          this.POStatus.push(lovArr[i].lov_desc);
+          break;
       }
     }
   };
@@ -83,7 +88,7 @@ export class ProjectTableComponent implements OnInit {
   currentFile?: File;
   progress = 0;
   filePathBody: any = {};
-  docsArr:any =[{doc:'hiii'},{doc:'hello'}];
+  docsArr: any = [{ doc: 'hiii' }, { doc: 'hello' }];
 
   uploadDoc(e: any) {
     this.progress = 0;
@@ -100,7 +105,7 @@ export class ProjectTableComponent implements OnInit {
           } else if (event instanceof HttpResponse) {
             // this.fileInfos = this.api.getFiles();
             this.filePathBody = event.body;
-            this.docsArr.push({docname : event.body.docname})
+            this.docsArr.push({ docname: event.body.docname })
             this.currentFile = undefined;
           }
         },
@@ -120,7 +125,7 @@ export class ProjectTableComponent implements OnInit {
     this.selectedFiles = undefined;
   };
 
-  saveDocs(projectId:string,type:string) {
+  saveDocs(projectId: string, type: string) {
     let data = {
       docname: this.filePathBody.docname,
       docpath: this.filePathBody.docpath,
@@ -132,7 +137,7 @@ export class ProjectTableComponent implements OnInit {
     }
     this.api.saveDoc(data).subscribe({
       next: (res: any) => {
-        let msg = type=='save'?'Project Saved Succesfully' : type=='update'?'Project Update Succesfully' : ''
+        let msg = type == 'save' ? 'Project Saved Succesfully' : type == 'update' ? 'Project Update Succesfully' : ''
         this.tostr.success(msg);
         this.getProjects();
         this.closePopup();
@@ -143,8 +148,8 @@ export class ProjectTableComponent implements OnInit {
     });
   };
 
-  getDocs(projId:number){
-    this.api.getDocs('Project',projId).subscribe({
+  getDocs(projId: number) {
+    this.api.getDocs('Project', projId).subscribe({
       next: (res: any) => {
         this.docsArr = res;
       },
@@ -154,7 +159,7 @@ export class ProjectTableComponent implements OnInit {
     });
   };
 
-  downloadFile(fileName:string){
+  downloadFile(fileName: string) {
     this.api.downloadDocs(fileName).subscribe({
       next: (blob: Blob) => {
         const a = document.createElement('a')
@@ -168,6 +173,24 @@ export class ProjectTableComponent implements OnInit {
         this.tostr.error('Document downloading failed')
       }
     })
+  };
+  selectPOStatus(e: any) {
+    if (e.target.value == 'Cleared') {
+      this.projectForm.patchValue({ poclearedpercentage: '100' });
+    } else {
+      this.projectForm.patchValue({ poclearedpercentage: '' });
+    }
+    if (e.target.value !="null") {
+      this.projectForm.get('ponumber')?.setValidators(Validators.required);
+      this.projectForm.get('ponumber')?.updateValueAndValidity();
+      this.projectForm.get('poamount')?.setValidators(Validators.required);
+      this.projectForm.get('poamount')?.updateValueAndValidity();
+    } else {
+      this.projectForm.get('ponumber')?.clearValidators();
+      this.projectForm.get('ponumber')?.updateValueAndValidity();
+      this.projectForm.get('poamount')?.clearValidators();
+      this.projectForm.get('poamount')?.updateValueAndValidity();
+    }
   };
 
   getProjects() {
@@ -183,35 +206,35 @@ export class ProjectTableComponent implements OnInit {
 
   selectProjStatus() {
     let type = this.controls('projectstatus');
-    if (type == 'InProgress') {
-      this.projectForm.get('holdfrom')?.clearValidators();
-      this.projectForm.get('holdfrom')?.updateValueAndValidity();
-      this.projectForm.get('discardedfrom')?.clearValidators();
-      this.projectForm.get('discardedfrom')?.updateValueAndValidity();
+
+    this.projectForm.get('holdfrom')?.clearValidators();
+    this.projectForm.get('holdfrom')?.updateValueAndValidity();
+    this.projectForm.get('resumefrom')?.clearValidators();
+    this.projectForm.get('resumefrom')?.updateValueAndValidity();
+    this.projectForm.get('discardedfrom')?.clearValidators();
+    this.projectForm.get('discardedfrom')?.updateValueAndValidity();
+    this.projectForm.get('actualstartdate')?.clearValidators();
+    this.projectForm.get('actualstartdate')?.updateValueAndValidity();
+    this.projectForm.get('actualenddate')?.clearValidators();
+    this.projectForm.get('actualenddate')?.updateValueAndValidity();
+
+    if (this.prevProjStatus == 'Hold' && type == 'InProgress') {
       this.projectForm.get('resumefrom')?.setValidators(Validators.required);
       this.projectForm.get('resumefrom')?.updateValueAndValidity();
     } else if (type == 'Hold') {
-      this.projectForm.get('resumefrom')?.clearValidators();
-      this.projectForm.get('resumefrom')?.updateValueAndValidity();
-      this.projectForm.get('discardedfrom')?.clearValidators();
-      this.projectForm.get('discardedfrom')?.updateValueAndValidity();
       this.projectForm.get('holdfrom')?.setValidators(Validators.required);
       this.projectForm.get('holdfrom')?.updateValueAndValidity();
-    }
-    else if (type == 'Discarded') {
-      this.projectForm.get('resumefrom')?.clearValidators();
-      this.projectForm.get('resumefrom')?.updateValueAndValidity();
-      this.projectForm.get('holdfrom')?.clearValidators();
-      this.projectForm.get('holdfrom')?.updateValueAndValidity();
+    } else if (type == 'Discarded') {
       this.projectForm.get('discardedfrom')?.setValidators(Validators.required);
       this.projectForm.get('discardedfrom')?.updateValueAndValidity();
-    } else {
-      this.projectForm.get('holdfrom')?.clearValidators();
-      this.projectForm.get('holdfrom')?.updateValueAndValidity();
-      this.projectForm.get('resumefrom')?.clearValidators();
-      this.projectForm.get('resumefrom')?.updateValueAndValidity();
-      this.projectForm.get('discardedfrom')?.clearValidators();
-      this.projectForm.get('discardedfrom')?.updateValueAndValidity();
+    } else if (type == 'InProgress') {
+      this.projectForm.get('actualstartdate')?.setValidators(Validators.required);
+      this.projectForm.get('actualstartdate')?.updateValueAndValidity();
+    } else if (type == 'Completed') {
+      this.projectForm.get('actualenddate')?.setValidators(Validators.required);
+      this.projectForm.get('actualenddate')?.updateValueAndValidity();
+      this.projectForm.get('actualstartdate')?.setValidators(Validators.required);
+      this.projectForm.get('actualstartdate')?.updateValueAndValidity();
     }
   };
 
@@ -256,12 +279,14 @@ export class ProjectTableComponent implements OnInit {
     this.isSave = 'Save';
     this.visible = 'block'
     this.projectForm.reset();
-    this.docsArr =[];
+    this.docsArr = [];
+    this.prevProjStatus == '';
   }
   projectClick(obj: any) {
     this.visible = 'block'
     this.isSave = 'Update';
     this.updateId = obj.id;
+    this.prevProjStatus = obj.projectstatus;
     this.projectForm.patchValue({
       projectname: obj.projectname,
       clientname: obj.clientname,
@@ -329,7 +354,7 @@ export class ProjectTableComponent implements OnInit {
     if (this.isSave == 'Save') {
       this.api.postProjects(dataObj).subscribe({
         next: (res: any) => {
-          this.saveDocs(res.projectId,'save');
+          this.saveDocs(res.projectId, 'save');
         },
         error: (err: any) => {
           this.tostr.error(err.error ? err.error : 'Something went wrong');
@@ -341,7 +366,7 @@ export class ProjectTableComponent implements OnInit {
 
       this.api.updateProjects(dataObj, this.updateId).subscribe({
         next: (res: any) => {
-          this.saveDocs(this.updateId.toString(),'update');
+          this.saveDocs(this.updateId.toString(), 'update');
         },
         error: (err: any) => {
           this.tostr.error('Something Went Wrong');

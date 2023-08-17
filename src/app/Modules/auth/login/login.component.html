@@ -17,8 +17,11 @@
                                 <input class="form__email" type="text" placeholder="Username" formControlName="username"
                                     [ngClass]="{'borderRed':isSubmitted && loginForm.get('username')?.invalid}" />
                                     <div class="red" *ngIf="username?.errors?.['required'] && isSubmitted">Username is required.</div>
-                                <input class="form__password" type="text" placeholder="Password" formControlName="password"
+                                <input class="form__password position-relative" [type]="showPassword ? 'text' : 'password'" placeholder="Password" formControlName="password"
                                     [ngClass]="{'borderRed':isSubmitted && loginForm.get('password')?.invalid}" />
+                                    <button (click)="togglePasswordVisibility()" class="pwBtn">
+                                        <i [class]="showPassword ? 'fas fa-eye' : 'fas fa-eye-slash'"></i>
+                                      </button>
                                     <div class="red" *ngIf="password?.errors?.['required'] && isSubmitted">Password is required.</div>
                                 <span class="forgotPW"><b>Forgot Password?</b></span>
                                 <input class="form__submit-btn" type="button" value="Login" (click)="login()" />

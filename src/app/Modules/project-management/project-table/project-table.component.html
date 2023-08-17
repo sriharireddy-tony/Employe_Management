@@ -44,17 +44,21 @@
           </div>
           <div class="row px-4 py-3" style="width: 100%;">
             <div class="col-lg-3">
-              <h6>Actual Start Date</h6>
-              <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy" class="date"
-                formControlName="actualstartdate"></p-calendar>
+              <h6>Actual Start Date<sup class="redStar" *ngIf="controls('projectstatus') == 'InProgress' || controls('projectstatus') == 'Completed'">*</sup></h6>
+              <div [ngClass]="{'borderRed':projectForm.get('actualstartdate')?.invalid && submitted}">
+                <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy" class="date"
+                  formControlName="actualstartdate"></p-calendar>
+              </div>
             </div>
             <div class="col-lg-3">
-              <h6>Actual End Date</h6>
-              <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy" class="date"
-                formControlName="actualenddate"></p-calendar>
+              <h6>Actual End Date<sup class="redStar" *ngIf="controls('projectstatus') == 'Completed'">*</sup></h6>
+              <div [ngClass]="{'borderRed':projectForm.get('actualenddate')?.invalid && submitted}">
+                <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy" class="date"
+                  formControlName="actualenddate"></p-calendar>
+              </div>
             </div>
             <div class="col-lg-3">
-              <h6>Financial Year<sup class="redStar">*</sup></h6>
+              <h6>Year<sup class="redStar">*</sup></h6>
               <select class="form-select" formControlName="financialyear" (change)="selectProjStatus()"
                 [ngClass]="{'borderRed':!controls('financialyear')&&submitted}">
                 <option value=null>Select Financial Year</option>
@@ -62,14 +66,14 @@
               </select>
             </div>
             <div class="col-lg-3">
-              <h6>PO Number</h6>
-              <input type="text" class="form-control" formControlName="ponumber">
+              <h6>PO Number<sup class="redStar" *ngIf="toStr(controls('postatus')) != ''">*</sup></h6>
+              <input type="text" class="form-control" formControlName="ponumber" [ngClass]="{'borderRed':projectForm.get('ponumber')?.invalid&&submitted}">
             </div>
           </div>
           <div class="row px-4 py-3" style="width: 100%;">
             <div class="col-lg-3">
-              <h6>PO Amount</h6>
-              <input type="text" class="form-control" formControlName="poamount">
+              <h6>PO Amount<sup class="redStar" *ngIf="toStr(controls('postatus')) != ''">*</sup></h6>
+              <input type="text" class="form-control" formControlName="poamount" [ngClass]="{'borderRed':projectForm.get('poamount')?.invalid&&submitted}">
             </div>
             <div class="col-lg-3">
               <h6>Project Status<sup class="redStar">*</sup></h6>
@@ -84,11 +88,15 @@
             </div>
             <div class="col-lg-3">
               <h6>PO Status</h6>
-              <input type="text" class="form-control" formControlName="postatus">
+              <select class="form-select" formControlName="postatus" (change)="selectPOStatus($event)"
+                [ngClass]="{'borderRed':!controls('postatus')&&submitted}">
+                <option value=null>Select Project Status</option>
+                <option [value]="item" *ngFor="let item of POStatus">{{item}}</option>
+              </select>
             </div>
             <div class="col-lg-3">
               <h6>PO Cleared Percentage</h6>
-              <input type="text" class="form-control" formControlName="poclearedpercentage">
+              <input type="text" class="form-control" formControlName="poclearedpercentage" [attr.disabled]="controls('postatus') == 'Cleared' || null">
             </div>
           </div>
           <div class="row px-4 py-3 d-flex"
@@ -100,7 +108,7 @@
                   formControlName="holdfrom"></p-calendar>
               </div>
             </div>
-            <div class="col-lg-3" *ngIf="controls('projectstatus') == 'InProgress'">
+            <div class="col-lg-3" *ngIf="controls('projectstatus') == 'InProgress' && prevProjStatus == 'Hold'">
               <h6>Resume From<sup class="redStar">*</sup></h6>
               <div [ngClass]="{'borderRed':!controls('resumefrom')&&submitted}">
                 <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy" class="date"
@@ -122,8 +130,9 @@
             <div class="col-lg-6 d-flex justify-content-between"
               style="border: 1px solid #ddd;width: 48% !important;margin-left: 15px;">
               <div>
-                <div *ngFor="let obj of docsArr" class="hyperLink">
-                  <h6 (click)="downloadFile(obj.docname)">{{obj.docname}}</h6>
+                <div *ngFor="let obj of docsArr" class="hyperLink" class="d-flex">
+                  <h6 (click)="downloadFile(obj.docname)">{{obj.docname}}</h6> &nbsp;&nbsp;
+                  <i class="fa-solid fa-trash-can"></i>
                 </div>
               </div>
               <div class="mt-2">

@@ -23,7 +23,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
     SidebarModule,
     AutocompleteLibModule,
     AccordionModule,
-    MultiSelectModule
+    MultiSelectModule,
   ]
 })
 export class UILibrariesModule { }
