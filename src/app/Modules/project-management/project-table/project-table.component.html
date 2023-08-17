@@ -44,7 +44,9 @@
           </div>
           <div class="row px-4 py-3" style="width: 100%;">
             <div class="col-lg-3">
-              <h6>Actual Start Date<sup class="redStar" *ngIf="controls('projectstatus') == 'InProgress' || controls('projectstatus') == 'Completed'">*</sup></h6>
+              <h6>Actual Start Date<sup class="redStar"
+                  *ngIf="controls('projectstatus') == 'InProgress' || controls('projectstatus') == 'Completed'">*</sup>
+              </h6>
               <div [ngClass]="{'borderRed':projectForm.get('actualstartdate')?.invalid && submitted}">
                 <p-calendar [showIcon]="true" inputId="icon" [readonlyInput]="true" dateFormat="dd-mm-yy" class="date"
                   formControlName="actualstartdate"></p-calendar>
@@ -67,13 +69,15 @@
             </div>
             <div class="col-lg-3">
               <h6>PO Number<sup class="redStar" *ngIf="toStr(controls('postatus')) != ''">*</sup></h6>
-              <input type="text" class="form-control" formControlName="ponumber" [ngClass]="{'borderRed':projectForm.get('ponumber')?.invalid&&submitted}">
+              <input type="text" class="form-control" formControlName="ponumber"
+                [ngClass]="{'borderRed':projectForm.get('ponumber')?.invalid&&submitted}">
             </div>
           </div>
           <div class="row px-4 py-3" style="width: 100%;">
             <div class="col-lg-3">
               <h6>PO Amount<sup class="redStar" *ngIf="toStr(controls('postatus')) != ''">*</sup></h6>
-              <input type="text" class="form-control" formControlName="poamount" [ngClass]="{'borderRed':projectForm.get('poamount')?.invalid&&submitted}">
+              <input type="text" class="form-control" formControlName="poamount"
+                [ngClass]="{'borderRed':projectForm.get('poamount')?.invalid&&submitted}">
             </div>
             <div class="col-lg-3">
               <h6>Project Status<sup class="redStar">*</sup></h6>
@@ -96,7 +100,8 @@
             </div>
             <div class="col-lg-3">
               <h6>PO Cleared Percentage</h6>
-              <input type="text" class="form-control" formControlName="poclearedpercentage" [attr.disabled]="controls('postatus') == 'Cleared' || null">
+              <input type="text" class="form-control" formControlName="poclearedpercentage"
+                [attr.disabled]="controls('postatus') == 'Cleared' || null">
             </div>
           </div>
           <div class="row px-4 py-3 d-flex"
@@ -127,13 +132,41 @@
                 Clear</button>
               <button class="btn btn-primary px-4" (click)="saveProjects()">{{isSave}}</button>
             </div>
-            <div class="col-lg-6 d-flex justify-content-between"
-              style="border: 1px solid #ddd;width: 48% !important;margin-left: 15px;">
-              <div>
-                <div *ngFor="let obj of docsArr" class="hyperLink" class="d-flex">
-                  <h6 (click)="downloadFile(obj.docname)">{{obj.docname}}</h6> &nbsp;&nbsp;
-                  <i class="fa-solid fa-trash-can"></i>
-                </div>
+            <div class="col-lg-6 d-flex justify-content-between p-0"
+              style="width: 48% !important;margin-left: 15px;">
+
+              <form action="/form/sumbit" method="get">
+                <label for="upload" >
+                  <i class="fa-solid fa-file-circle-plus mt-1" style="color:rgb(255, 0, 106) ;"></i>&nbsp;
+                </label>
+                <input type="file" name="photo" id="upload" (change)="uploadDoc($event)"/>
+              </form>
+
+              
+              <table class="table table-bordered docTable" style="table-layout: fixed;">
+                <thead>
+                  <tr>
+                    <th style="width: 50px;">S.No</th>
+                    <th style="width: 170px;">Doc Name</th>
+                    <th style="width: 150px;">Remarks</th>
+                    <th style="width: 35px;"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let obj of docsArr;let i=index">
+                    <td>{{i+1}}</td>
+                    <td class="textOverflow"><b class="hyperLink" [title]="obj.docname" (click)="downloadFile(obj.docname)">{{obj.docname}}</b></td>
+                    <td class="p-0">
+                      <textarea class="form-control p-0" [(ngModel)]="obj.remarks"></textarea>
+                    </td>
+                    <td><i class="fa-solid fa-trash m-0" (click)="delDoc(obj)"></i></td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <!-- <div *ngFor="let obj of docsArr" class="hyperLink" class="d-flex">
+                <h6 (click)="downloadFile(obj.docname)">{{obj.docname}}</h6> &nbsp;&nbsp;
+                <i class="fa-solid fa-trash-can"></i>
               </div>
               <div class="mt-2">
                 <form action="/form/sumbit" method="get" style="width: 125px;">
@@ -149,7 +182,7 @@
                   </label>
                   <input type="file" name="photo" id="upload" (change)="uploadDoc($event)" />
                 </form>
-              </div>
+              </div> -->
             </div>
           </div>
         </form>

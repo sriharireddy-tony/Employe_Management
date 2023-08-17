@@ -3,13 +3,13 @@
 }
 
 .info>.fa-circle-info {
-    color: red;
+    color: #fa5e5e;
     margin-top: 3px;
     font-size: 22px;
 }
 
 .info>h5 {
-    color: #ff2c00;
+    color: #fa5e5e;
 }
 .selectedLOV {
     margin-top: 3px;
@@ -32,3 +32,11 @@
     background-color: red !important;
     font-weight: bold;
 }
+.back {
+    font-size: 22px;
+    cursor: pointer;
+  }
+  
+  .back:hover {
+    color: red;
+  }

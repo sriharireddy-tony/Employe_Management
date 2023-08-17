@@ -17,7 +17,7 @@
             <h6>Month:</h6>
             <select class="form-select" [(ngModel)]="currentMonth" (ngModelChange)="setDates()" (change)="getTimesheet()">
                 <option value="">select Month</option>
-                <option [value]="item" *ngFor="let item of monthArr">{{item}}</option>
+                <option [value]="item" *ngFor="let item of monthArr" [disabled]="diableMonth(item)">{{item}}</option>
             </select>
         </div>
         <div class="col-lg-2">
@@ -83,6 +83,7 @@
     <div class="tableFooter">
         <i class="fa-solid fa-plus" (click)="addTimesheet()"></i>
         <div style="margin-bottom: 3px;">
+            <button type="button" class="btn" style="background-color: #ff9900;" (click)="excelDownload()">Excel Report</button>
             <button type="button" class="btn" style="background-color: #007c8f;" (click)="save()" *ngIf="isObjectEmpty(updateObj)">Save</button>
             <button type="button" class="btn" *ngIf="!isObjectEmpty(updateObj)" (click)="updateBtnTM()">Update</button>
         </div>

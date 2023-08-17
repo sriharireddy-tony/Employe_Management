@@ -46,7 +46,7 @@
             <div class="col-lg-3" style="position: relative;">
               <h6>Reporting Manager<sup class="redStar">*</sup></h6>
               <div [ngClass]="{'borderRed':!controls('reportingmanager')&&submitted}">
-                <ng-autocomplete [data]="ReporManger" formControlName="reportingmanager" [searchKeyword]="keyword"
+                <ng-autocomplete [data]="ReporManger" formControlName="reportingmanager" [searchKeyword]="keyword" 
                 placeholder="Search Reporting Manager" [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate">
             </ng-autocomplete>
             <span *ngIf="employeeForm.controls['reportingmanager'].value == ''"><i id="searchicon" class="fa fa-search"></i></span>
@@ -82,7 +82,7 @@
             <div class="col-lg-3">
               <h6>Roles<sup class="redStar">*</sup></h6>
               <div [ngClass]="{'borderRed':!controls('roles')&&submitted}">
-                <p-multiSelect [options]="roles" (onChange)="selectRoles($event)" formControlName="roles" defaultLabel="Select Role" optionLabel="role" display="chip"></p-multiSelect>
+                <p-multiSelect [options]="roles" [showToggleAll]="false" (onChange)="selectRoles($event)" formControlName="roles" defaultLabel="Select Role" optionLabel="role" display="chip"></p-multiSelect>
               </div>
             </div>
             <div class="col-lg-3">

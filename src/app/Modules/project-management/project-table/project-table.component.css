@@ -123,3 +123,14 @@ font-size: 22px;
   position: absolute;
   z-index: -1;
 }
+.docTable thead tr th{
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  background-color: black;
+  color:aliceblue;
+}
+.textOverflow{
+  white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}

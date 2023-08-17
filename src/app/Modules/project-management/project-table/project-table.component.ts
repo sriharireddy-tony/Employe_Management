@@ -88,7 +88,7 @@ export class ProjectTableComponent implements OnInit {
   currentFile?: File;
   progress = 0;
   filePathBody: any = {};
-  docsArr: any = [{ doc: 'hiii' }, { doc: 'hello' }];
+  docsArr: any = [];
 
   uploadDoc(e: any) {
     this.progress = 0;
@@ -104,8 +104,9 @@ export class ProjectTableComponent implements OnInit {
             this.progress = Math.round((100 * event.loaded) / event.total);
           } else if (event instanceof HttpResponse) {
             // this.fileInfos = this.api.getFiles();
+            this.docsArr = [];
             this.filePathBody = event.body;
-            this.docsArr.push({ docname: event.body.docname })
+            this.docsArr.push({ id: '', docname: event.body.docname, remarks: '' })
             this.currentFile = undefined;
           }
         },
@@ -158,6 +159,21 @@ export class ProjectTableComponent implements OnInit {
       }
     });
   };
+  delDoc(obj: any) {
+    if (obj.id == ''){
+      this.docsArr.splice(this.docsArr.indexOf(obj), 1)
+    } else {
+      this.api.deleteDoc(obj.id).subscribe({
+        next: (res:any) => {
+          this.tostr.error('File deleted successfully');
+          this.docsArr.splice(this.docsArr.indexOf(obj), 1)
+        },
+        error: (err: any) => {
+          this.tostr.error('Document downloading failed')
+        }
+      })
+    }
+  }
 
   downloadFile(fileName: string) {
     this.api.downloadDocs(fileName).subscribe({
@@ -174,13 +190,14 @@ export class ProjectTableComponent implements OnInit {
       }
     })
   };
+
   selectPOStatus(e: any) {
     if (e.target.value == 'Cleared') {
       this.projectForm.patchValue({ poclearedpercentage: '100' });
     } else {
       this.projectForm.patchValue({ poclearedpercentage: '' });
     }
-    if (e.target.value !="null") {
+    if (e.target.value != "null") {
       this.projectForm.get('ponumber')?.setValidators(Validators.required);
       this.projectForm.get('ponumber')?.updateValueAndValidity();
       this.projectForm.get('poamount')?.setValidators(Validators.required);

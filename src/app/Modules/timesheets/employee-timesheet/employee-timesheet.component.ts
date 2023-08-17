@@ -48,6 +48,26 @@ export class EmployeeTimesheetComponent implements OnInit {
       }
     })
   }
+  excelDownload(){
+    let dataObj = {
+      name : this.userName,
+      financialyear: this.currentYear,
+      month : this.currentMonth
+    };
+      this.api.getExcelTimesheet(dataObj).subscribe(
+        (response: Blob) => {
+          const a = document.createElement('a')
+          const objectUrl = URL.createObjectURL(response)
+          a.href = objectUrl
+          a.download = `Timesheet_${this.currentMonth}_${this.currentYear}.xlsx`;
+          a.click();
+          URL.revokeObjectURL(objectUrl);
+        },
+        (err: any) => {
+          this.toast.error('Document downloading failed')
+        }
+      )
+  };
 
   addTimesheet() {
     this.updateObj = {};
@@ -77,15 +97,31 @@ export class EmployeeTimesheetComponent implements OnInit {
       this.yearArr.push(currentYear1)
     }
   }
+  diableMonth(month:string){
+    let selectedMonth = this.monthArr.indexOf(month) + 1;
+    var today = new Date();
+    const currentMonth = today.getMonth() + 1;
+    if(selectedMonth > currentMonth){
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   setDates() {
+    let dd;
     this.dateAndDayArray = [];
     let currentYear1 = +this.currentYear;
     let month = this.monthArr.indexOf(this.currentMonth) + 1;
-    // let lastDay = new Date(currentYear1, month, 0).getDate();
 
     var today = new Date();
-    var dd = +String(today.getDate()).padStart(2, '0');
+    const currentMonth = today.getMonth() + 1;
+    // let selectedMonth = this.monthArr.indexOf(this.currentMonth)+1
+    if(month < currentMonth){
+     dd = new Date(currentYear1, month, 0).getDate();
+    } else {
+      dd = +String(today.getDate()).padStart(2, '0');
+    }
 
     for (let day = 1; day <= dd; day++) {
       let date = new Date(currentYear1, month - 1, day);
@@ -181,7 +217,7 @@ export class EmployeeTimesheetComponent implements OnInit {
         this.toast.error('Something Went Wrong');
       }
     })
-  }
+  };
 
   updateTimesheet(obj: any) {
     if (Object.keys(this.updateObj).length === 0) {

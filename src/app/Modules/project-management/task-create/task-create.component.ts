@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -39,7 +39,7 @@ export class TaskCreateComponent implements OnInit {
   });
 
   constructor(private route: ActivatedRoute, private fb: FormBuilder, private dtPipe: DatePipe, private shared: SharedService, private api: ApiService,
-    private tostr: ToastrService, private confirmationService: ConfirmationService) {
+    private tostr: ToastrService, private confirmationService: ConfirmationService,private loacation: Location) {
     this.route.queryParams.subscribe(params => {
       this.projectId = params['ProjctId'];
       this.projectName = params['ProjectName'];
@@ -53,7 +53,9 @@ export class TaskCreateComponent implements OnInit {
       this.getLov();
     }, 500);
   }
-
+  back() {
+    this.loacation.back();
+  }
   clear() {
     this.taskForm.reset();
   }

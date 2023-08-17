@@ -106,6 +106,9 @@ export class ApiService {
   getTimesheet(obj: any) {
     return this.http.get(`${this.URI}/timesheet/timesheetbyid?name=${obj.name}&financialyear=${obj.financialyear}&month=${obj.month}`);
   }
+  // getExcelTimesheet(obj: any) {
+  //   return this.http.get(`${this.URI}/timesheet/excel?name=${obj.name}&financialyear=${obj.financialyear}&month=${obj.month}`);
+  // }
   updateTimesheet(data: any) {
     return this.http.put(`${this.URI}/timesheet/update`, data);
   }
@@ -132,7 +135,9 @@ export class ApiService {
   getDocs(projName:string,projId:number) {
     return this.http.get(`${this.URI}/document/docbyid?entityname=${projName}&entitygeneratedid=${projId}`);
   }
-
+  deleteDoc(id: number) {
+    return this.http.delete(`${this.URI}/document/delete/${id}`);
+  }
   downloadDocs(file: any): Observable<Blob> {
     const headers = new HttpHeaders()
       .set('Content-Type', 'application/json')
@@ -143,4 +148,12 @@ export class ApiService {
     });
   }
 
+  getExcelTimesheet(obj: any): Observable<Blob> {
+    return this.http.get(`${this.URI}/document/downloadexcel?name=${obj.name}&financialyear=${obj.financialyear}&month=${obj.month}`, {
+      // headers: headers,
+      responseType: 'blob'
+    });
+  }
+
 }
+
