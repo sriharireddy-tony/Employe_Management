@@ -93,9 +93,9 @@
               </select> -->
             </div>
             <div class="col-lg-3 mt-4" style="justify-content: end;display: flex;">
-              <button class="btn btn-outline-danger px-4" style="margin-right: 20px;"
+              <button type="button" class="btn btn-outline-danger px-4" style="margin-right: 20px;"
                 (click)="clearEmployees()">Clear</button>
-              <button class="btn btn-primary px-4" (click)="saveEmployees()">{{isSave}}</button>
+              <button type="button" class="btn btn-primary px-4" (click)="saveEmployees()">{{isSave}}</button>
             </div>
           </div>
         </form>
@@ -108,7 +108,7 @@
 </div> -->
 <div class="textSearch contai" style="display: flex;">
   <div style="width: 300px;">
-    <button class="btn btn-primary" (click)="createEmployees()">Create Employee</button>
+    <button type="button" class="btn btn-primary" (click)="createEmployees()">Create Employee</button>
   </div>
   <div style="width: 100%;" class="boxShadow">
     <input class="form-control" type="text" placeholder="Search..." [(ngModel)]="searchText">

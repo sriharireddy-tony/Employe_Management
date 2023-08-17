@@ -54,14 +54,16 @@ export class ProjectAllocationComponent implements OnInit, OnChanges {
         obj.allocationhours = +obj.allocationhours;
       }
     }
-    this.api.postProjAllo(this.projAllocation).subscribe({
-      next: (res: any) => {
-        this.toast.success('Task Allocationed Succesfully');
-        this.getEmpTasks(this.tabClickObj);
-      }, error: (err: any) => {
-        this.toast.error('Something Went Wrong');
-      }
-    })
+    if(this.projAllocation.length != 0){
+      this.api.postProjAllo(this.projAllocation).subscribe({
+        next: (res: any) => {
+          this.toast.success('Task Allocationed Succesfully');
+          this.getEmpTasks(this.tabClickObj);
+        }, error: (err: any) => {
+          this.toast.error('Something Went Wrong');
+        }
+      })
+    }
   };
 
   getEmpTasks(obj: any) {
