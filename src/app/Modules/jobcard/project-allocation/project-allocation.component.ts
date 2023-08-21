@@ -39,20 +39,29 @@ export class ProjectAllocationComponent implements OnInit, OnChanges {
   }
   addProjAllo() {
     this.projAllocation.push({
-      id: '', empId: '', project: null, task: null, client: '', remarks: '', startdate: '', enddate: '',
+      id: '', empId: '', project: '', task: '', client: '', remarks: '', startdate: '', enddate: '',
       allocationpercentage: '', allocationhours: '', createdby: '', createdon: '',tasksArr: this.tasksArr
     })
     this.empClick(this.tabClickObj);
   };
 
   saveProjAllo() {
+    let returnFlag = false;
     for (let obj of this.projAllocation) {
       if (!obj.id) {
+        if(this.toStr(obj.project) == '' || this.toStr(obj.task) == ''){
+          this.toast.warning('Project and Task fields are mandatory');
+          returnFlag = true;
+          return;
+        }
         obj.startdate = this.dtPipe.transform(obj.startdate, 'dd-MM-yyyy'),
           obj.enddate = this.dtPipe.transform(obj.enddate, 'dd-MM-yyyy'),
           obj.empId = +obj.empId;
         obj.allocationhours = +obj.allocationhours;
       }
+    }
+    if(returnFlag){
+      return;
     }
     if(this.projAllocation.length != 0){
       this.api.postProjAllo(this.projAllocation).subscribe({
@@ -126,6 +135,10 @@ export class ProjectAllocationComponent implements OnInit, OnChanges {
     }
   }
   updateProjAllo() {
+    if(this.toStr(this.updateObj.project) == '' || this.toStr(this.updateObj.task) == ''){
+      this.toast.warning('Project and Task fields are mandatory');
+      return;
+    }
     let i = this.projAllocation.indexOf(this.updateObj)
     this.projAllocation[i].updatedby = this.userName;
     this.projAllocation[i].updationon = this.dtPipe.transform(new Date(), 'dd-MM-yyyy')
@@ -161,7 +174,7 @@ export class ProjectAllocationComponent implements OnInit, OnChanges {
   }
   selectProj(e: any,i:number) {
     const projObj = this.projectsArr.filter((res: any) => res.projectname == e.target.value);
-    this.api.getTasksByProj(projObj[0].id).subscribe({
+    projObj.length !=0 && this.api.getTasksByProj(projObj[0].id).subscribe({
       next: (res: any) => {
         this.tasksArr = res;
         this.projAllocation[i].tasksArr = this.tasksArr;
@@ -175,4 +188,11 @@ export class ProjectAllocationComponent implements OnInit, OnChanges {
   isObjectEmpty(obj: any): boolean {
     return Object.keys(obj).length === 0;
   }
+  toStr(data: string | null | undefined) {
+    if (data != undefined && data != null && data != "") {
+      return data;
+    } else {
+      return "";
+    }
+  };
 }

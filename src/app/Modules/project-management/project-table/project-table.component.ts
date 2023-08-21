@@ -274,7 +274,7 @@ export class ProjectTableComponent implements OnInit {
             this.getProjects();
           },
           error: (err: any) => {
-            this.tostr.error('Project Deletion Failed');
+            this.tostr.error(err.error? err.error.status : 'Project Deletion Failed');
           }
         })
       },
@@ -288,6 +288,7 @@ export class ProjectTableComponent implements OnInit {
       }
     });
   };
+
   closePopup() {
     this.visible = 'none'
     this.projectForm.reset();

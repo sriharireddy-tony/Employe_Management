@@ -3,13 +3,14 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http'
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  URI: string = "http://192.168.2.185:8081";
+  URI: string = environment.URI;
 
   constructor(private http: HttpClient, private toastr: ToastrService, private router: Router) { }
 

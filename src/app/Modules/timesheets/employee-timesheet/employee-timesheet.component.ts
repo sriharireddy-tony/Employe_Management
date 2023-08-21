@@ -22,7 +22,7 @@ export class EmployeeTimesheetComponent implements OnInit {
   timeSheet: any = [];
   tasksArr: any = [];
   userData: any = {};
-  updateObj:any ={};
+  updateObj: any = {};
 
   constructor(private location: Location, private shared: SharedService, private api: ApiService, private toast: ToastrService, private confirmationService: ConfirmationService) { }
 
@@ -48,25 +48,25 @@ export class EmployeeTimesheetComponent implements OnInit {
       }
     })
   }
-  excelDownload(){
+  excelDownload() {
     let dataObj = {
-      name : this.userName,
+      name: this.userName,
       financialyear: this.currentYear,
-      month : this.currentMonth
+      month: this.currentMonth
     };
-      this.api.getExcelTimesheet(dataObj).subscribe(
-        (response: Blob) => {
-          const a = document.createElement('a')
-          const objectUrl = URL.createObjectURL(response)
-          a.href = objectUrl
-          a.download = `Timesheet_${this.currentMonth}_${this.currentYear}.xlsx`;
-          a.click();
-          URL.revokeObjectURL(objectUrl);
-        },
-        (err: any) => {
-          this.toast.error('Document downloading failed')
-        }
-      )
+    this.api.getExcelTimesheet(dataObj).subscribe(
+      (response: Blob) => {
+        const a = document.createElement('a')
+        const objectUrl = URL.createObjectURL(response)
+        a.href = objectUrl
+        a.download = `Timesheet_${this.currentMonth}_${this.currentYear}.xlsx`;
+        a.click();
+        URL.revokeObjectURL(objectUrl);
+      },
+      (err: any) => {
+        this.toast.error('Document downloading failed')
+      }
+    )
   };
 
   addTimesheet() {
@@ -97,11 +97,11 @@ export class EmployeeTimesheetComponent implements OnInit {
       this.yearArr.push(currentYear1)
     }
   }
-  diableMonth(month:string){
+  diableMonth(month: string) {
     let selectedMonth = this.monthArr.indexOf(month) + 1;
     var today = new Date();
     const currentMonth = today.getMonth() + 1;
-    if(selectedMonth > currentMonth){
+    if (selectedMonth > currentMonth) {
       return true;
     } else {
       return false;
@@ -117,8 +117,8 @@ export class EmployeeTimesheetComponent implements OnInit {
     var today = new Date();
     const currentMonth = today.getMonth() + 1;
     // let selectedMonth = this.monthArr.indexOf(this.currentMonth)+1
-    if(month < currentMonth){
-     dd = new Date(currentYear1, month, 0).getDate();
+    if (month < currentMonth) {
+      dd = new Date(currentYear1, month, 0).getDate();
     } else {
       dd = +String(today.getDate()).padStart(2, '0');
     }
@@ -136,18 +136,27 @@ export class EmployeeTimesheetComponent implements OnInit {
   };
 
   save() {
-    let dataArr:any =[];
+    let dataArr: any = [];
+    let returnFunc = false;
     this.timeSheet.forEach((obj: any) => {
       obj.financialyear = this.currentYear;
       obj.month = this.currentMonth;
       obj.empid = this.userData.empid;
       obj.reportingmanager = this.userData.reportingmanager;
       obj.client = this.userData.client;
-      if(obj.id ==''){
+      if (obj.id == '') {
+        if (this.toStr(obj.project) == '' || this.toStr(obj.task) == '') {
+          this.toast.warning('Project and Task fields are mandatory');
+          returnFunc = true;
+          return;
+        }
         dataArr.push(obj);
       }
     });
-    this.api.postTimesheet(dataArr).subscribe({
+    if (returnFunc) {
+      return;
+    }
+    dataArr.length !=0 && this.api.postTimesheet(dataArr).subscribe({
       next: (res: any) => {
         this.toast.success("Timesheet Saved Successfully");
         this.getTimesheet();
@@ -205,9 +214,9 @@ export class EmployeeTimesheetComponent implements OnInit {
   getTimesheet() {
     this.timeSheet = [];
     let dataObj = {
-      name : this.userName,
+      name: this.userName,
       financialyear: this.currentYear,
-      month : this.currentMonth
+      month: this.currentMonth
     };
     this.api.getTimesheet(dataObj).subscribe({
       next: (res: any) => {
@@ -229,6 +238,10 @@ export class EmployeeTimesheetComponent implements OnInit {
 
   updateBtnTM() {
     let i = this.timeSheet.indexOf(this.updateObj);
+    if(this.toStr(this.updateObj.project) == '' || this.toStr(this.updateObj.task) == '') {
+      this.toast.warning('Project and Task fields are mandatory');
+      return;
+    }
     // this.timeSheet[i].updatedby = this.userName;
     // this.timeSheet[i].updationon = this.dtPipe.transform(new Date(), 'dd-MM-yyyy')
 
@@ -243,8 +256,14 @@ export class EmployeeTimesheetComponent implements OnInit {
     })
   };
 
- isObjectEmpty(obj: any): boolean {
+  isObjectEmpty(obj: any): boolean {
     return Object.keys(obj).length === 0;
   }
-
+  toStr(data: string | null | undefined) {
+    if (data != undefined && data != null && data != "") {
+      return data;
+    } else {
+      return "";
+    }
+  };
 }

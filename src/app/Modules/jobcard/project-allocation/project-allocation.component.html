@@ -52,20 +52,20 @@
                                         <tr *ngFor="let obj of projAllocation;let i = index">
                                             <td class="text-center align-middle" [ngClass]="{'dis': obj.id && updateObj != obj}">{{i+1}}</td>
                                             <td [ngClass]="{'dis': obj.id && updateObj != obj}">
-                                                <select class="form-select" [(ngModel)]="obj.project" (click)="selectProj($event,i)" [ngClass]="{'dis': obj.id && updateObj != obj}">
-                                                    <option value=null>Select Project</option>
+                                                <select class="form-select" [(ngModel)]="obj.project" [title]="obj.project" (click)="selectProj($event,i)" [ngClass]="{'dis': obj.id && updateObj != obj}">
+                                                    <option value=''>Select Project</option>
                                                     <option [value]="obj1.projectname" *ngFor="let obj1 of projectsArr">
                                                         {{obj1.projectname}}</option>
                                                 </select>
                                             </td>
                                             <td [ngClass]="{'dis': obj.id && updateObj != obj}">
-                                                <select class="form-select" [(ngModel)]="obj.task" [ngClass]="{'dis': obj.id && updateObj != obj}">
-                                                    <option value=null>Select Task</option>
+                                                <select class="form-select" [(ngModel)]="obj.task" [title]="obj.task" [ngClass]="{'dis': obj.id && updateObj != obj}">
+                                                    <option value=''>Select Task</option>
                                                     <option [value]="obj2.task" *ngFor="let obj2 of obj.tasksArr">
                                                         {{obj2.task}}</option>
                                                 </select>
                                             </td>
-                                            <td [ngClass]="{'dis': obj.id && updateObj != obj}">
+                                            <td>
                                                 <textarea class="form-control remarksText" placeholder="Enter Remarks" [(ngModel)]="obj.remarks" [disabled]="!!obj.id && updateObj != obj"
                                                  [title]=obj.remarks> </textarea>
                                             </td>

@@ -13,7 +13,8 @@
 .contai {
     padding-top: 54px;
 }
-.projAllo{
+
+.projAllo {
     width: 3000px;
 }
 
@@ -48,24 +49,28 @@
     font-size: 15px;
     height: 38px;
 }
-.snoFix{
+
+.snoFix {
     left: 0;
     position: sticky;
 }
-.projFix{
+
+.projFix {
     left: 58px;
     position: sticky;
 }
-.projTask{
+
+.projTask {
     left: 337px;
     position: sticky;
 }
-.bgorange{
+
+.bgorange {
     background-color: orange !important;
     color: black !important;
 }
 
-.tablediv{
+.tablediv {
     padding: 25px 0vw 0px 0vw;
 }
 
@@ -75,24 +80,27 @@
     background-color: black;
     color: aliceblue;
     justify-content: center;
-  }
-  
-  .projectTable td {
+}
+
+.projectTable td {
     border: 1px solid white;
     padding: 8px;
-  }
-  .projectTable tr:hover {
-   background-color: bisque !important;
-   font-weight: bold;
-  }
-  .even-row {
+}
+
+.projectTable tr:hover {
+    background-color: bisque !important;
+    font-weight: bold;
+}
+
+.even-row {
     background-color: #f2f2f2 !important;
-  }
-  
-  .odd-row {
+}
+
+.odd-row {
     background-color: #ddd !important;
-  }
-  .tableFooter i {
+}
+
+.tableFooter i {
     font-size: 30px;
     margin-left: 13px;
     color: red;
@@ -113,18 +121,27 @@
     color: white;
     cursor: pointer;
 }
-.dis{
+
+.dis {
     pointer-events: none;
     background-color: #e9ecef;
 }
-.updateBtnHilight{
+
+.updateBtnHilight {
     color: darkmagenta !important;
     transform: scale(1.2);
 }
+
 #searchicon {
     position: absolute;
     top: 37px;
     right: 18px;
     font-size: 22px;
     color: rgb(0, 24, 37);
-  }
+}
+
+.calenders {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

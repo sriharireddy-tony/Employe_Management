@@ -292,3 +292,24 @@ p-accordiontab>div>div>a {
 hr {
   margin: 0.5rem 0 !important;
 }
+.calenderOverley > p-calendar > span{
+  height: 100% !important;
+}
+.calenderOverley .p-datepicker-header {
+  background: #96ffe6 !important;
+}
+.calenderOverley .p-datepicker-header .p-datepicker-title {
+  background-color: transparent !important;
+}
+.calenderOverley .p-datepicker-multiple-month .p-datepicker-group-container {
+ flex-wrap: wrap;
+}
+.calenderOverley .p-datepicker-multiple-month .p-datepicker-group:first-child {
+ width: 290px !important;
+}
+.calenderOverley .p-datepicker-multiple-month .p-datepicker-group-container .p-datepicker-group {
+  width: 290px !important;
+}
+/* .p-datepicker-multiple-month .p-datepicker-group-container .p-datepicker-group {
+  flex: 1 1 auto;
+} */

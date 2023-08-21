@@ -2,13 +2,15 @@ import { HttpClient, HttpEvent, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { Observable, catchError } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
 
-  URI: string = "http://192.168.2.185:8081";
+  URI: string = environment.URI;
+
   httpClient: any;
 
   constructor(private http: HttpClient, private auth: AuthService) { }
@@ -72,7 +74,7 @@ export class ApiService {
     return this.http.post(`${this.URI}/jobcard/add`, data);
   }
   getProjAllo(empId: any) {
-    return this.http.get(`${this.URI}/jobcard/findbyempid?empId=${empId}`);
+    return this.http.get(`${this.URI}/jobcard/findbyempid?empid=${empId}`);
   }
   deleteProjAllo(id: number) {
     return this.http.delete(`${this.URI}/jobcard/delete/${id}`);
