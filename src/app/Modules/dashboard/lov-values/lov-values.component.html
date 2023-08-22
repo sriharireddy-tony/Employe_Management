@@ -84,7 +84,7 @@
                     <tr *ngFor="let obj of filterLOV; let i = index;">
                         <td>{{i+1}}</td>
                         <td>{{obj.type}}</td>
-                        <td>{{obj.lov_desc}}</td>
+                        <td>{{obj.lovDesc}}</td>
                         <td>{{obj.status}}</td>
                         <td class="py-0 pt-1">
                             <button class="btn btn-primary py-1" (click)="updateLOV(obj)">Update</button>
@@ -122,8 +122,8 @@
                 <tr *ngFor="let obj of LOVAllData | searchFilter: searchText:['type','lov_id','lov_desc','status']; let i = index;">
                     <td>{{i+1}}</td>
                     <td>{{obj.type}}</td>
-                    <td>{{obj.lov_id}}</td>
-                    <td>{{obj.lov_desc}}</td>
+                    <td>{{obj.lovId}}</td>
+                    <td>{{obj.lovDesc}}</td>
                     <td>{{obj.status}}</td>
                     <td></td>
                     <td></td>

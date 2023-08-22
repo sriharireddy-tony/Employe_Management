@@ -64,10 +64,10 @@ export class TaskCreateComponent implements OnInit {
     for (let i = 0; i < lovArr.length; i++) {
       switch (lovArr[i].type) {
         case 'Project Status':
-          this.projStatus.push(lovArr[i].lov_desc);
+          this.projStatus.push(lovArr[i].lovDesc);
           break;
           case 'Task Type':
-          this.taskType.push(lovArr[i].lov_desc);
+          this.taskType.push(lovArr[i].lovDesc);
           break;
       }
     }

@@ -65,13 +65,13 @@ export class ProjectTableComponent implements OnInit {
     for (let i = 0; i < lovArr.length; i++) {
       switch (lovArr[i].type) {
         case 'Client':
-          this.clientsArr.push(lovArr[i].lov_desc);
+          this.clientsArr.push(lovArr[i].lovDesc);
           break;
         case 'Project Status':
-          this.projStatus.push(lovArr[i].lov_desc);
+          this.projStatus.push(lovArr[i].lovDesc);
           break;
         case 'PO Status':
-          this.POStatus.push(lovArr[i].lov_desc);
+          this.POStatus.push(lovArr[i].lovDesc);
           break;
       }
     }

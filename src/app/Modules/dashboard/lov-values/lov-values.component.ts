@@ -43,8 +43,8 @@ export class LOVValuesComponent implements OnInit {
   addLOV() {
     var obj = {
       "id": this.isSave == 'Save' ? '' : this.id,
-      "lov_id": this.lovId,
-      "lov_desc": this.lovDesc,
+      "lovId": this.lovId,
+      "lovDesc": this.lovDesc,
       "type": this.typengModel,
       "status": this.isActive
     }
@@ -78,8 +78,8 @@ export class LOVValuesComponent implements OnInit {
   updateLOV(obj: any) {
     this.isSave ='Update';
     this.id = obj.id;
-    this.lovId = obj.lov_id;
-    this.lovDesc = obj.lov_desc;
+    this.lovId = obj.lovId;
+    this.lovDesc = obj.lovDesc;
     this.typengModel = obj.type;
     this.isActive = obj.status;
   }

@@ -96,16 +96,16 @@ export class EmployeeTableComponent implements OnInit, OnDestroy {
     for (let i = 0; i < lovArr.length; i++) {
       switch (lovArr[i].type) {
         case 'Reporting Manager':
-          this.ReporManger.push({ type: lovArr[i].lov_desc });
+          this.ReporManger.push({ type: lovArr[i].lovDesc });
           break;
         case 'Status':
-          this.statusArr.push(lovArr[i].lov_desc);
+          this.statusArr.push(lovArr[i].lovDesc);
           break;
         case 'Client':
-          this.clientsArr.push(lovArr[i].lov_desc);
+          this.clientsArr.push(lovArr[i].lovDesc);
           break;
         case 'Roles':
-          this.roles.push({ role: lovArr[i].lov_desc });
+          this.roles.push({ role: lovArr[i].lovDesc });
           break;
       }
     }
