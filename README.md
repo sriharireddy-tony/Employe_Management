@@ -1,27 +1,121 @@
-# EmployeManagement
+Example interceptor:- 
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.1.2.
 
-## Development server
+import { Injectable, Injector } from
+ 
+'@angular/core';
+import { HttpInterceptor, HttpHandler, HttpRequest, HttpEvent, HttpErrorResponse } from
+ 
+'@angular/common/http';
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+import { Observable, of } from
+ 
+'rxjs';
+import { catchError, switchMap } from
+ 
+'rxjs/operators';
+import { TokenStorageService } from
+ 
+'../services/token-storage.service';
+import { AuthenticationService } from
+ 
+'../services/authentication.service';
 
-## Code scaffolding
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+@Injectable()
+export
+ 
+class
+ 
+RefreshTokenInterceptor
+ 
+implements
+ 
+HttpInterceptor
+ 
+{
 
-## Build
+  private refreshTokenInProgress: boolean = false;
+  private refreshTokenQueue: HttpRequest<any>[] = [];
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+  constructor(private tokenStorage: TokenStorageService, private authenticationService: AuthenticationService) {}
 
-## Running unit tests
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (!request.url.includes('/authenticate') && !this.refreshTokenInProgress) {
+      const accessToken = this.tokenStorage.getAccessToken();
+      const refreshToken = this.tokenStorage.getRefreshToken();
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+      if (!accessToken || !refreshToken) {
+        return of(new HttpErrorResponse({ status: 401 }));
+      }
 
-## Running end-to-end tests
+      request = request.clone({
+        headers: request.headers.set('Authorization', `Bearer ${accessToken}`).set('refreshToken', `${refreshToken}`)
+      });
+    }
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+    return next.handle(request).pipe(
+      catchError(error => {
+        if (error.status === 401 && error.error.messageCode === 'MSG003') {
+          // Handle refresh token expiration
+          if (!this.refreshTokenInProgress) {
+            this.refreshTokenInProgress = true;
 
-## Further help
+            // Queue pending requests
+            if (this.refreshTokenQueue.length > 0) {
+              this.refreshTokenQueue.push(request);
+            } else {
+              // Initiate refresh token request
+              return this.refreshTokenAndRetry(request);
+            }
+          } else {
+            // Add request to queue if refresh token already in progress
+            this.refreshTokenQueue.push(request);
+          }
+        } else if (error.status === 0) {
+          // Handle network error
+          error.error.message = 'Something Went Wrong';
+          return throwError(error);
+        } else {
+          // Handle other errors
+          this.refreshTokenInProgress = false;
+          return throwError(error);
+        }
+      })
+    );
+  }
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+  private refreshTokenAndRetry(request: HttpRequest<any>): Observable<HttpEvent<any>> {
+    const refreshTokenObj = {
+      refreshToken: this.tokenStorage.getRefreshToken()
+    };
+
+    return this.authenticationService.refreshToken(refreshTokenObj).pipe(
+      switchMap(response => {
+        this.tokenStorage.setAccessToken(response.data.accessToken);
+        this.refreshTokenInProgress = false;
+
+        // Retry queued requests with updated access token
+        while (this.refreshTokenQueue.length > 0) {
+          const queuedRequest = this.refreshTokenQueue.shift();
+          const updatedRequest = queuedRequest.clone({
+            headers: queuedRequest.headers.set('Authorization', `Bearer ${response.data.accessToken}`)
+          });
+          next.handle(updatedRequest).subscribe();
+        }
+
+        // Retry original request
+        return next.handle(request);
+      }),
+      catchError(error => {
+        this.refreshTokenInProgress = false;
+        // Handle refresh token failure
+        if (error.status === 401 || error.status === 403) {
+          // Logout if refresh token is also invalid
+          this.authenticationService.logout();
+        }
+        return throwError(error);
+      })
+    );
+  }
+}
